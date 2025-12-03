@@ -24,6 +24,8 @@ function SideBar() {
   const { mutate: SignOut, isSuccess } = useSIgnoutAccountmutation();
   const naviagte = useNavigate();
   const { user, setUser, setIsauthenticated } = useAuthContext();
+  console.log("x",user);
+  
   useEffect(() => {
     if (isSuccess) {
       setUser(INITIAL_USER), 
@@ -33,7 +35,7 @@ function SideBar() {
   }, [isSuccess]);
 
   return (
-    <nav className=" ">
+    <nav className=" fixed ">
       <div className="flex flex-col gap-11">
         <Link to={`/Profile/${user.id}`} className="flex gap-3 items-center">
           <img

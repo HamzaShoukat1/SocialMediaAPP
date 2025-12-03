@@ -3,13 +3,12 @@ import { Outlet } from "react-router-dom"
 import './index.css'
 import { Toaster } from "./components/ui/sonner"
 import AuthWrapper from "./context/Authcontext/AuthWrapper"
-
+import { useEffect, useState } from "react"
 
 function App() {
 
-
-
   return (
+    <>
 <div>
   {/* heaader  */}
   <Toaster position="top-right" />
@@ -20,9 +19,22 @@ function App() {
   </main>
   {/* footer  */}
 </div>
+    </>
+    
+
   )
+  
+  
+
+  
 }
 
+
+
+
 export default App
+
+
+
 
 

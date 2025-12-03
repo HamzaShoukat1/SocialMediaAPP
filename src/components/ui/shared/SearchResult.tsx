@@ -5,7 +5,7 @@ import type { PostDocument } from "../forms/Postform";
 
 type SearchProps = {
   issearchfetching:boolean,
-  SearchPosts: Models.DocumentList<PostDocument> | undefined
+  SearchPosts: Models.DocumentList<PostDocument>
 
 }
 
@@ -18,7 +18,7 @@ function SearchResult({issearchfetching,SearchPosts}:SearchProps) {
 
   if( SearchPosts?.documents && SearchPosts?.documents.length > 0 ){
     return (
-      <GridPostList posts={SearchPosts?.documents} />
+      <GridPostList posts={SearchPosts?.documents} showStats={false}/>
     )
   }
   return (

@@ -2,7 +2,7 @@ import Postform from "@/components/ui/forms/Postform"
 
 const CreatePost = () => {
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-1 ">
       <div className="flex flex-col flex-1  items-start gap-10 py-10 px-5 md:px-10 lg:p-14"> 
         <div className="max-w-5xl gap-3 flex items-start justify-start">
           <img src="/assets/icons/add-post.svg"

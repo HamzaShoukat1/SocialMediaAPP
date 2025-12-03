@@ -55,7 +55,6 @@ const SigninForm = () => {
     }
     const isLoggedIn = await checkCurrentUser()
 
-    console.log({isLoggedIn});
     
     if(isLoggedIn){
       form.reset();

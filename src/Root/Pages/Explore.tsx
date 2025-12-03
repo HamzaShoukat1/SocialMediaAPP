@@ -9,7 +9,8 @@ import {useInView} from 'react-intersection-observer'
 import { useInfiniteDocuments } from "@/lib/reactquery/UseInfinity";
 import { QUERY_KEYS } from "@/lib/reactquery/querykeys";
 import { config } from "@/lib/appwrite/config";
-
+import {type  PostDocument } from "@/components/ui/forms/Postform";
+import { Query } from "appwrite";
 const Explore = () => {
   const {ref,inView} = useInView()
   // const { data:posts} = usegetPostsforexplore()
@@ -18,6 +19,12 @@ const Explore = () => {
   const {data,fetchNextPage,hasNextPage} = useInfiniteDocuments({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
     collectionId: config.postcollectionId,
+      filters: [
+      Query.select(["*","creators.*"]),   
+    ],
+ 
+
+    enabled:true
 
 
   })
@@ -29,6 +36,10 @@ const Explore = () => {
 
   
 const {data:searchpost,isFetching: isSearchFetching} = useSearchPost(debounceValue)
+
+
+console.log("see",data);
+
   if(!data){
     return (
       <div className="flex justify-center w-full">
@@ -38,10 +49,20 @@ const {data:searchpost,isFetching: isSearchFetching} = useSearchPost(debounceVal
     )
     
   }
+    const savedPosts: PostDocument[] =
+      data?.pages.flatMap((page: any) =>
+        page.documents.map((doc: any) => ({
+          ...doc,
+          creators: doc.creators,
+        }))
+      ) || [];
+      
     
 
   const shouldshowsearchresults = searchValue !== ''
-  const shouldshowposts = !shouldshowsearchresults && data?.pages?.every((item:any)=> item.documents?.length === 0)
+  // const shouldshowposts = !shouldshowsearchresults && data?.pages?.every((item:any)=> item.documents?.length === 0)
+    const shouldshowposts = !shouldshowsearchresults && savedPosts.length === 0
+
   return (
     <div className="explore-container">
       <div className="explore-inner_container">
@@ -85,10 +106,9 @@ const {data:searchpost,isFetching: isSearchFetching} = useSearchPost(debounceVal
 
         ) : shouldshowposts ? (
           <p className="text-gray-300 mt-10 text-center w-full">End of Posts</p>
-        ) : data.pages.map((item:any,index)=> (
-          <GridPostList key={`page-${index}`} posts={item.documents}/>
+        ) : 
+          <GridPostList showUser={true} showStats={false} posts={savedPosts}/>
 
-        ))
       }
 
       </div>

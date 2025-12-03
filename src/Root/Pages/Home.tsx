@@ -36,9 +36,9 @@ function Home() {
 
   return (
     <div className="flex flex-1">
-      <div className="home-container">
+      <div className="home-container ">
         <div className="home-posts">
-          {isLoading && data?.pages?.length === 0  ? (
+          {isLoading ? (
             <div className=" flex justify-center h-[70vh] items-center w-full">
               <Loader  />
             </div>
@@ -60,10 +60,13 @@ function Home() {
 
       {/* Infinite Scroll Loader */}
       {hasNextPage && (
-        <div ref={ref} className="mt-10 ">
+        <div ref={ref} className="mt-10 flex flex-col ">
           <Loader />
         </div>
+        
+        
       )}
+      
         </div>
       </div>
 

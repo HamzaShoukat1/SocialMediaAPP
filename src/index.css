@@ -45,9 +45,9 @@
 
 /* BASE LAYER */
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  /* * {
+    @apply border-border
+  } */
 
   body {
     @apply bg-black text-white;
@@ -89,7 +89,7 @@
   .explore-container {@apply flex flex-col flex-1 items-center overflow-scroll py-10 px-5 md:p-14;}
   .explore-inner_container {@apply max-w-5xl flex flex-col items-center w-full gap-6 md:gap-9;}
   .explore-search {@apply h-12 border-none focus-visible:ring-0 focus-visible:ring-offset-0 ring-offset-0;}
-  .home-container {@apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14;}
+  .home-container {@apply flex flex-col flex-1 items-center gap-10  py-10 px-5 md:px-8 lg:p-14;}
   .home-posts {@apply max-w-screen-sm flex flex-col items-center w-full gap-6 md:gap-9;}
   .home-creators {@apply hidden xl:flex flex-col w-72 2xl:w-465 px-6 py-10 gap-10 overflow-scroll;}
   .post_details-container {@apply flex flex-col flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 items-center;}

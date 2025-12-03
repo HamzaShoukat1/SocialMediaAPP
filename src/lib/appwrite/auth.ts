@@ -35,7 +35,6 @@ export class AuthService {
                 name: newAccount.name,
                 email: newAccount.email,
                 username:user.username,
-                // avatar: avatarUrl.toString(),
                 imageUrl: avatarUrl.toString()
             })
             return newUserProfile
@@ -76,15 +75,13 @@ export class AuthService {
                 config.userscollectionId,
                 [Query.equal('accountId',currentAccount.$id),
                  Query.select(['*', 'save.*']),
-
-
-                    
                 ]
                 
                 
             )
             if (!currentUser) throw new Error("No user found in database");
             
+            if(currentUser.total === 0) return null
             
             
             return currentUser.documents[0]

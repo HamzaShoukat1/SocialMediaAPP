@@ -7,11 +7,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function AuthWrapper({children}: {children:React.ReactNode}) {
     const [user, setUser] = useState<IUser>(INITIAL_USER)
-    const [isLoading, setloading] = useState(false)
+    const [isLoading, setloading] = useState(true)
     const [isauthenticated, setIsauthenticated] = useState(false)
     const navigate = useNavigate()
     
     const checkCurrentUser = async()=> {
+
         try {
             const currentUserAccount = await authservice.getCurreentUser()
             
@@ -25,7 +26,6 @@ export default function AuthWrapper({children}: {children:React.ReactNode}) {
                     bio:currentUserAccount.bio,
                 })
                 setIsauthenticated(true)
-                return true
             }
             return false
             

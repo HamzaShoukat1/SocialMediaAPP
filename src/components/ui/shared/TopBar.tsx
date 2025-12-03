@@ -2,19 +2,23 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../button'
 import { useSIgnoutAccountmutation } from '@/lib/reactquery/queryandmutations'
 import { useEffect } from 'react'
-import { useAuthContext } from '@/context/Authcontext/AuthContext'
+import { INITIAL_USER, useAuthContext } from '@/context/Authcontext/AuthContext'
 
 const TopBar = () => {
     const {mutate:SignOut, isSuccess} = useSIgnoutAccountmutation()
     const naviagte = useNavigate()
-    const {user} = useAuthContext()
+    const {setUser,user,setIsauthenticated} = useAuthContext()
     useEffect(() => {
-        if(isSuccess) naviagte(0)
+        if(isSuccess){
+            setUser(INITIAL_USER)
+            setIsauthenticated(false)
+            naviagte("/sign-in")
+        }
      
     }, [isSuccess])
     
   return (
-    <section className='  '>
+    <section className=' sticky top-0 '>
 
         <div className='flex justify-between py-3 px-5'>
             <Link to='/' className='flex items-center gap-2'>

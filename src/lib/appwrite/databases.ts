@@ -398,7 +398,11 @@ export class DatabasesService {
       const posts = await this.databases.listDocuments(
         config.databasesId,
         config.postcollectionId,
-        [Query.search('caption',searchTerm)]
+        [Query.search('caption',searchTerm),
+                Query.select(["*","creators.*"]),   
+
+        ]
+
       );
       if(!posts) throw Error
       return posts
@@ -425,6 +429,7 @@ export class DatabasesService {
     Query.limit(10),
     ...filters
   ];
+
 
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam));

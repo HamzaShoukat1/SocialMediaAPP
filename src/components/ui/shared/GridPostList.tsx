@@ -9,6 +9,8 @@ type Gridprops = {
   showStats?: boolean
 }
 function GridPostList({posts,showUser = true, showStats = true}:Gridprops) {
+  console.log("aa",posts);
+  
   
   const {user} = useAuthContext()
   console.log("10",user);
@@ -23,8 +25,8 @@ function GridPostList({posts,showUser = true, showStats = true}:Gridprops) {
           <div className=" flex absolute bottom-0 p-5 w-full bg-linear-to-t gap-2">
             {showUser && (
               <div className="flex gap-2 items-center justify-start flex-1" >
-                <img src={post.creators.imageUrl} className="h-8 w-8 rounded-full " alt='creators'/> 
-                <p>{post.creators.name}</p>
+                <img src={post.creators?.imageUrl} className="h-8 w-8 rounded-full " alt='creators'/> 
+                <p>{post.creators?.name}</p>
 
               </div>
             )}
