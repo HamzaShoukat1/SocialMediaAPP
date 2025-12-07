@@ -1,7 +1,6 @@
-import { Client, Databases, Storage,Query ,ID, type Models,  } from "appwrite";
+import { Client, Databases, Storage,Query ,ID,  } from "appwrite";
 import { config } from "./config";
 import type { INewPost, IUpdatePost } from "../types/types";
-import type { PostDocument } from "@/components/ui/forms/Postform";
 
 
 export class DatabasesService {
@@ -186,7 +185,23 @@ export class DatabasesService {
     }
   }
 
-  
+  async getSavedRecord(userId: string, postId: string) {
+  try {
+    const result = await this.databases.listDocuments(
+      config.databasesId,
+      config.savescollectionId,
+      [
+        Query.equal("user", userId),
+        Query.equal("post", postId),
+      ]
+    );
+    return result;
+  } catch (err) {
+    console.error("Error fetching saved record", err);
+    return null;
+  }
+}
+
   async savePost(postId: string,userId: string,){
     try {
       const updatePost = await this.databases.createDocument(

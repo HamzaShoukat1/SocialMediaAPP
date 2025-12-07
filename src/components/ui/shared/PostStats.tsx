@@ -1,4 +1,4 @@
-import { useDeleteSavedPost, useGetCurrentUser, useLikedPost, useSavedPost } from "@/lib/reactquery/queryandmutations";
+import { useDeleteSavedPost, useGetSavedRecord, useLikedPost, useSavedPost } from "@/lib/reactquery/queryandmutations";
 import type { Models } from "appwrite"
 import type { PostDocument } from "../forms/Postform";
 import { useState ,useEffect} from "react";
@@ -21,44 +21,33 @@ const PostStats = ({post,userId}:PostStatePros)=> {
   const [likes, setlikes] = useState(likeList)
   const {mutate:likePost} = useLikedPost()
   const [isSaved, setisSaved] = useState(false)
-  const {mutate:savePost,isPending:isPostSaving} = useSavedPost()
+  const {data: savedPostRecordsData} = useGetSavedRecord(userId,post?.$id || '')
     const {mutate:deleteSavedPost,isPending:isdeltePost} = useDeleteSavedPost()
-    const {data:currentUser}  = useGetCurrentUser()
-    // const {data:saveUserPost} = useGetsavedPostsByUser(currentUser?.$id || "")
+    const { mutate: savePost } = useSavedPost();
 
-    // console.log("0",currentUser?.post);
-//   useEffect(() => {
-//   if (saveUserPost) {
-//     console.log("Full saved posts:", saveUserPost);
-//   }
-// }, [saveUserPost]);
 
-const saveUserPosts = currentUser?.save;
-console.log("111222",saveUserPosts);
+
+const savedPostrecords = savedPostRecordsData?.documents?.[0] || null
+
 
     
     
     
-//who saved the post
-const savedPostRecord = saveUserPosts?.find(
-  (record:SavedPostDocument) => record?.post?.$id === post?.$id
-)      
-      console.log("1111",savedPostRecord);
-      
+
 
 
 
       
 useEffect(() => {
- setisSaved(savedPostRecord ? true : false)
-}, [savedPostRecord])
+ setisSaved(!!savedPostrecords)
+}, [savedPostrecords])
 
 
 
 
 const handleLikePost= (e: React.MouseEvent)=> {
   e.stopPropagation();
-  let newLikes = [...likes!];
+  let newLikes = [...likes];
 
   const hasLiked = (newLikes.includes(userId));
 
@@ -77,9 +66,9 @@ const handleLikePost= (e: React.MouseEvent)=> {
 const handleSavedPost = (e:React.MouseEvent)=> {
   e.stopPropagation()
     
-    if(savedPostRecord){
+    if(savedPostrecords){
     setisSaved(false)
-    deleteSavedPost(savedPostRecord.$id)
+    deleteSavedPost({savedRecordId: savedPostrecords.$id,userId})
   } else{
     
      savePost({postId:post?.$id || '',userId})
@@ -128,8 +117,8 @@ const handleSavedPost = (e:React.MouseEvent)=> {
 
       {/* //  */}
        <div className="flex gap-2 ">
-       {isPostSaving || isdeltePost ? <Loader /> 
-       : 
+       {/* {isPostSaving || isdeltePost ? <Loader />  */}
+       
         <img 
         className="cursor-pointer"
         src={`${isSaved ? "/assets/icons/saved.svg" : 
@@ -139,7 +128,7 @@ const handleSavedPost = (e:React.MouseEvent)=> {
         height={20}
         onClick={handleSavedPost}
         />
-}
+
       </div>
 
 

@@ -39,7 +39,7 @@ function Home() {
       <div className="home-container ">
         <div className="home-posts">
           {isLoading ? (
-            <div className=" flex justify-center h-[70vh] items-center w-full">
+            <div className=" flex justify-center h-full items-center w-full">
               <Loader  />
             </div>
           ) : (

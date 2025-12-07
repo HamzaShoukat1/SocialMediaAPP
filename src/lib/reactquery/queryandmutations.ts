@@ -76,86 +76,63 @@ export const useLikedPost =  ()=> {
     
   })
 };
+export const useSavedPost = () => {
+  const queryClient = useQueryClient();
 
-export const useSavedPost =  ()=> {
-  const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ( {postId,userId}: {postId: string; userId: string}) =>
-      
-      databasesservice.savePost(postId,userId),
-    onSuccess: (_data,userId)=> {
-        console.log("🔥 TRYING TO SAVE POST");
-                console.log("🔥 TRYING TO SAVE POST",userId);
+    mutationFn: ({ postId, userId }: { postId: string; userId: string }) =>
+      databasesservice.savePost(postId, userId),
 
-
-
-
-   
-          queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
-      });
-          queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POSTS]
-      });
-            queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_CURRENT_USER]
-        
-      });
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_USER_SAVED_POST,userId]
-      })
-
-
-
-    }
-      
-
-    
-  })
+    onSuccess: (_data, { userId }) => {
+      // Invalidate queries so UI updates correctly
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_RECENT_POSTS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_POSTS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_CURRENT_USER] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_USER_SAVED_POST, userId] });
+    },
+  });
+};
+export const useGetSavedRecord = (userId: string, postId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_SAVED_POST, userId, postId],
+    queryFn: () => databasesservice.getSavedRecord(userId, postId),
+    enabled: !!userId && !!postId
+  });
 };
 
 
-export const useDeleteSavedPost =  ()=> {
+
+export const useDeleteSavedPost = () => {
   const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: (savedRecordId:string) =>
+    mutationFn: ({ savedRecordId }: { savedRecordId: string,userId:string },) =>
       databasesservice.deletesavePost(savedRecordId),
-    onSuccess: (_data,variable)=> {
-      const userId = variable
-          queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
-      });
-          queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POSTS]
-      });
-            queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_CURRENT_USER]
-      });
-         queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_USER_SAVED_POST,userId]
+
+    onSuccess: (_data, { userId }) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
       })
-
-    }
-      
-
-    
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_SAVED_POST, userId],
+      })
+    },
   })
 }
+
 export const useGetCurrentUser = ()=> {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER],
     queryFn:  ()=> authservice.getCurreentUser()
   })
 };
-// export const useGetsavedPostsByUser = (userId:string)=> {
-//   return useQuery({
-//     queryKey: [QUERY_KEYS.GET_USER_SAVED_POST,userId],
-    
-//     queryFn:()=>  databasesservice.useGetSavedPostsByUser(userId),
-//     // enabled: !!userId,
 
-//   })
-// };
 export const usegetPostByID = (postId:string)=> {
   return useQuery<PostDocument>({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID,postId],
