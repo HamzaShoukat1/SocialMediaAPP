@@ -46,7 +46,6 @@ const Saved = () => {
         creators: doc.post?.creators,
       }))
     ) || [];
-    console.log("hazma",savedPosts);
     
 
   return (

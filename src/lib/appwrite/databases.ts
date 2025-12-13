@@ -1,6 +1,7 @@
 import { Client, Databases, Storage,Query ,ID,  } from "appwrite";
 import { config } from "./config";
-import type { INewPost, IUpdatePost } from "../types/types";
+import type { INewPost, IUpdatePost, IUser } from "../types/types";
+import type { PostDocument } from "@/components/ui/forms/Postform";
 
 
 export class DatabasesService {
@@ -291,8 +292,8 @@ export class DatabasesService {
   // };
 
 
-  async getPostById(postId:string){
-    try {
+  async getPostById(postId:string): Promise<PostDocument>{
+    
       
       const post = await this.databases.getDocument(
         config.databasesId,
@@ -303,12 +304,8 @@ export class DatabasesService {
 
         ]
       )
-      return post
-    } catch (error) {
-      console.log(error);
-      
-      
-    }
+      return post as unknown as PostDocument
+    
 
   };
   
@@ -455,7 +452,25 @@ export class DatabasesService {
     collectionId,
     queries
   );
-}
+};
+
+//getUserById
+ async getUserById(userId:string){
+  
+    const user = await this.databases.getDocument(
+      config.databasesId,
+      config.userscollectionId,
+      userId,
+      [
+                  Query.select(['*', 'posts.*'])
+]
+    );
+    if(!user) throw new Error
+  
+    return user 
+  } 
+
+
 
   
 

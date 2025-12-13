@@ -12,6 +12,7 @@ export const  QUERY_KEYS = {
   GET_INFINITE_POSTS:"getInfinitePosts",
   GET_RECENT_POSTS:"getRecentPosts",
   GET_POST_BY_ID:"getPostById",
+  GET_USER_DETAILS: "getuserdetail",
   GET_USER_POSTS:"getUserPosts",
   GET_FILE_PREVIEW:"getFilePreview",
   GET_SAVED_POSTS: "getsavedPost",

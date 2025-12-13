@@ -69,8 +69,7 @@ const SigninForm = () => {
       })
       navigate('/')
     }
-    else{
-        return  toast('Sign in failed.plz try again', {
+   toast("Signed in successfully!",{
         style: {
           background: 'black',
           color:'white',
@@ -79,7 +78,6 @@ const SigninForm = () => {
         }
         
       })
-    }
       
       
 

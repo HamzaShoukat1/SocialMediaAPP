@@ -5,7 +5,7 @@ import {
   useInfiniteQuery
 } from '@tanstack/react-query'
 import  authservice from '../appwrite/auth'
-import type { INewPost, INewUser, IUpdatePost, SigninUser } from '../types/types'
+import type { INewPost, INewUser, IUpdatePost, IUser, SigninUser } from '../types/types'
 import databasesservice from '../appwrite/databases'
 import { QUERY_KEYS } from './querykeys'
 import type { PostDocument } from '@/components/ui/forms/Postform'
@@ -136,7 +136,7 @@ export const useGetCurrentUser = ()=> {
 export const usegetPostByID = (postId:string)=> {
   return useQuery<PostDocument>({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID,postId],
-    queryFn: ()=> databasesservice.getPostById(postId) as unknown as PostDocument,
+    queryFn: ()=> databasesservice.getPostById(postId),
     enabled: !!postId //“Only fetch the post if we actually have a postId.”
     //So we write enabled: !!postId to prevent the query from running before we have a valid post ID — avoiding wasted requests and errors.
   })
@@ -225,5 +225,15 @@ export const UseDeletePost = ()=> {
   })  
 
 }
+
+// for profile ..//get userid
+export const usegetUserDetails = (userId:string)=> {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_DETAILS,userId],
+    queryFn: ()=> databasesservice.getUserById(userId),
+    enabled: !!userId
+  })
+}
+
 
 

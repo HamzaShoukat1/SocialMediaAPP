@@ -1,3 +1,5 @@
+import type { PostDocument } from "@/components/ui/forms/Postform";
+
 export type INavLink = {
   imgURL: string;
   route: string;

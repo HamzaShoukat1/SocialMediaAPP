@@ -24,7 +24,6 @@ function SideBar() {
   const { mutate: SignOut, isSuccess } = useSIgnoutAccountmutation();
   const naviagte = useNavigate();
   const { user, setUser, setIsauthenticated } = useAuthContext();
-  console.log("x",user);
   
   useEffect(() => {
     if (isSuccess) {

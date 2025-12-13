@@ -9,35 +9,42 @@ type Gridprops = {
   showStats?: boolean
 }
 function GridPostList({posts,showUser = true, showStats = true}:Gridprops) {
-  console.log("aa",posts);
   
   
   const {user} = useAuthContext()
-  console.log("10",user);
   
   return (
-    <ul className=" grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-      {posts?.map((post,index)=> (
-        <li key={index} className="relative min-w-80 h-80 ">
-          <Link to={`/posts/${post.$id}`} className="flex rounded-3xl overflow-hidden cursor-pointer w-full h-full">
-          <img src={post.imageUrl} className="h-full w-full object-cover"/>
-          </Link>
-          <div className=" flex absolute bottom-0 p-5 w-full bg-linear-to-t gap-2">
-            {showUser && (
-              <div className="flex gap-2 items-center justify-start flex-1" >
-                <img src={post.creators?.imageUrl} className="h-8 w-8 rounded-full " alt='creators'/> 
-                <p>{post.creators?.name}</p>
+<ul className="grid w-full gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">  
+  {posts.map((post) => (
+    <li key={post.$id} className="relative h-80">
+      <Link
+        to={`/posts/${post.$id}`}
+        className="flex rounded-3xl overflow-hidden w-full h-full"
+      >
+        <img
+          src={post.imageUrl}
+          className="h-full w-full object-cover"
+          alt="post"
+        />
+      </Link>
 
-              </div>
-            )}
-            {showStats && <PostStats post={post} userId={user.id} />}
-
+      <div className="absolute bottom-0 flex w-full gap-2 p-5 bg-linear-to-t">
+        {showUser && (
+          <div className="flex flex-1 items-center gap-2">
+            <img
+              src={post.creators?.imageUrl}
+              className="h-8 w-8 rounded-full "
+            />
+            <p>{post.creators?.name}</p>
           </div>
+        )}
 
-        </li>
-      ))}
-      
-    </ul>
+        {showStats && <PostStats post={post} userId={user.id} />}
+      </div>
+    </li>
+  ))}
+</ul>
+
   )
 }
 
