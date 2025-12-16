@@ -21,7 +21,6 @@ import { useLocation } from "react-router-dom";
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-
 function sidebar() {
   const [iscollapsed, setiscollapsed] = useState(false)
   const { pathname } = useLocation();
@@ -130,6 +129,7 @@ function sidebar() {
      <Button variant="ghost" className="cursor-pointer">        <img src="/assets/icons/logout.svg" alt="logout" />
      {!iscollapsed && (
               <p className="text-gray-200 small-medium lg:base-medium">Logout</p>
+              
 
      )}
        </Button>

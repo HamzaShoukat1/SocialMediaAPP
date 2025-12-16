@@ -40,34 +40,20 @@ export const useCreatePostmutaion = ()=> {
 
 }
 
-// // export const useGetRecentPosts = ()=> {
-// //   return useQuery<PostDocument[]>({
-// //     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-// //     queryFn:()=> databasesservice.getRecentPosts(),
-// //         staleTime: 1000 * 60, 
-        
-// //   })
-// };
+
 
 export const useLikedPost =  ()=> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ( {postId,likesArray}: {postId: string; likesArray: string[]}) =>
       databasesservice.likePost(postId,likesArray),
-    onSuccess: (data)=> {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
-      });
-          queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
-      });
-          queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POSTS]
-      });
-            queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_CURRENT_USER]
-      })
-
+    onSuccess: (_data,variables)=> {
+  
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEYS.GET_POST_BY_ID,variables.postId],
+        });
+           
+    
 
 
     }

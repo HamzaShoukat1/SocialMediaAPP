@@ -1,9 +1,10 @@
 import { useDeleteSavedPost, useGetSavedRecord, useLikedPost, useSavedPost } from "@/lib/reactquery/queryandmutations";
 import type { Models } from "appwrite"
 import type { PostDocument } from "../forms/Postform";
-import { useState ,useEffect} from "react";
 import { checkIsLiked } from "@/lib/utils";
 import Loader from "./Loader";
+import { useEffect, useMemo, useState } from "react";
+
 
 type PostStatePros = {
   post?:PostDocument;
@@ -16,18 +17,30 @@ export type SavedPostDocument = Models.Document & {
 };
 
 const PostStats = ({post,userId}:PostStatePros)=> {
-  const likeList = post?.likes?.map((user:Models.Document)=>user.$id) ?? []
-
+  const likeList = useMemo(()=> post?.likes?.map((user:Models.Document)=>user.$id) ?? [],
+[post?.likes])
   const [likes, setlikes] = useState(likeList)
+  
+    useEffect(() => {
+  setlikes(likeList);
+}, [likeList]);
+
+
+
   const {mutate:likePost} = useLikedPost()
-  const [isSaved, setisSaved] = useState(false)
-  const {data: savedPostRecordsData} = useGetSavedRecord(userId,post?.$id || '')
+
+
+  // const [isSaved, setisSaved] = useState(false)
+  const {data: savedPostRecordsData,isLoading,isFetching} = useGetSavedRecord(userId,post?.$id || '')
     const {mutate:deleteSavedPost,isPending:isdeltePost} = useDeleteSavedPost()
-    const { mutate: savePost } = useSavedPost();
+    const { mutate: savePost,isPending:isSaving } = useSavedPost();
 
 
+
+const ischeckingSaved = isLoading || isFetching || isdeltePost || isSaving;
 
 const savedPostrecords = savedPostRecordsData?.documents?.[0] || null
+const isSaved = !!savedPostrecords
 
 
     
@@ -38,41 +51,39 @@ const savedPostrecords = savedPostRecordsData?.documents?.[0] || null
 
 
       
-useEffect(() => {
- setisSaved(!!savedPostrecords)
-}, [savedPostrecords])
+// useEffect(() => {
+//  setisSaved(!!savedPostrecords)
+// }, [savedPostrecords])
 
 
 
 
-const handleLikePost= (e: React.MouseEvent)=> {
+const handleLikePost = (e: React.MouseEvent) => {
   e.stopPropagation();
-  let newLikes = [...likes];
 
-  const hasLiked = (newLikes.includes(userId));
+  if (!post?.$id) return;
 
-  if(hasLiked){
-    newLikes = newLikes.filter((id)=> id !== userId)
+  const hasLiked = likes.includes(userId);
 
-  }else{
-    newLikes.push(userId)
-  };
-  setlikes(newLikes)
-  likePost({postId:post?.$id || '',likesArray: newLikes})
+  const newLikes = hasLiked
+    ? likes.filter((id) => id !== userId)
+    : [...likes, userId];
 
+    setlikes(newLikes)
+  likePost({
+    postId: post.$id,
+    likesArray: newLikes,
+  });
+};
 
-
-}
 const handleSavedPost = (e:React.MouseEvent)=> {
   e.stopPropagation()
     
     if(savedPostrecords){
-    setisSaved(false)
     deleteSavedPost({savedRecordId: savedPostrecords.$id,userId})
   } else{
     
      savePost({postId:post?.$id || '',userId})
-  setisSaved(true)
   };
  
 }
@@ -117,9 +128,9 @@ const handleSavedPost = (e:React.MouseEvent)=> {
 
       {/* //  */}
        <div className="flex gap-2 ">
-       {/* {isPostSaving || isdeltePost ? <Loader />  */}
        
-        <img 
+      {ischeckingSaved ? (<Loader />) : (
+          <img 
         className="cursor-pointer"
         src={`${isSaved ? "/assets/icons/saved.svg" : 
           "/assets/icons/save.svg"  
@@ -129,6 +140,7 @@ const handleSavedPost = (e:React.MouseEvent)=> {
         onClick={handleSavedPost}
         />
 
+      )}
       </div>
 
 
