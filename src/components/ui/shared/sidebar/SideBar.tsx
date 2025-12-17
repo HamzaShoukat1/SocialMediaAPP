@@ -21,8 +21,7 @@ import { useLocation } from "react-router-dom";
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-function sidebar() {
-  const [iscollapsed, setiscollapsed] = useState(false)
+function sidebar({iscollapsed,setiscollapsed}:any) {
   const { pathname } = useLocation();
   const { mutate: SignOut, isSuccess } = useSIgnoutAccountmutation();
   const naviagte = useNavigate();
@@ -61,7 +60,7 @@ function sidebar() {
       }}
       >
            <MenuItem
-           onClick={()=> setiscollapsed((prev)=> !prev)}
+           onClick={()=> setiscollapsed((prev:any)=> !prev)}
            icon={iscollapsed ? <FaArrowRight /> : undefined}
            className=" "
            >
