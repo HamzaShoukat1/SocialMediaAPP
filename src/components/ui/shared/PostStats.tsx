@@ -1,4 +1,4 @@
-import { useDeleteSavedPost, useGetSavedRecord, useLikedPost, useSavedPost } from "@/lib/reactquery/queryandmutations";
+import { useDeleteSavedPost, useGetSavedRecord, useLikePost, useSavedPost } from "@/lib/reactquery/queryandmutations";
 import type { Models } from "appwrite"
 import type { PostDocument } from "../forms/Postform";
 import { checkIsLiked } from "@/lib/utils";
@@ -19,7 +19,7 @@ export type SavedPostDocument = Models.Document & {
 const PostStats = ({post,userId}:PostStatePros)=> {
   const likeList = useMemo(()=> post?.likes?.map((user:Models.Document)=>user.$id) ?? [],
 [post?.likes])
-  const [likes, setlikes] = useState(likeList)
+  const [likes, setlikes] = useState<string[]>(likeList)
   
     useEffect(() => {
   setlikes(likeList);
@@ -27,7 +27,7 @@ const PostStats = ({post,userId}:PostStatePros)=> {
 
 
 
-  const {mutate:likePost} = useLikedPost()
+  const {mutate:likePost} = useLikePost()
 
 
   // const [isSaved, setisSaved] = useState(false)

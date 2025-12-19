@@ -1,6 +1,6 @@
-import { Client, Databases, Storage,Query ,ID,  } from "appwrite";
+import { Client, Databases, Storage, Query, ID, } from "appwrite";
 import { config } from "./config";
-import type { INewPost, IUpdatePost, IUser } from "../types/types";
+import type { INewPost, IUpdatePost, IUpdateUser } from "../types/types";
 import type { PostDocument } from "@/components/ui/forms/Postform";
 
 
@@ -54,7 +54,7 @@ export class DatabasesService {
       if (!uploadedFile) throw new Error("File upload failed");
 
       // Get public file preview URL
-      const fileUrl =  this.getfileView(uploadedFile.$id);
+      const fileUrl = this.getfileView(uploadedFile.$id);
 
       if (!fileUrl) {
         await this.deleteFile(uploadedFile.$id);
@@ -70,7 +70,7 @@ export class DatabasesService {
         config.postcollectionId,
         ID.unique(),
         {
-          creators: post.userId, 
+          creators: post.userId,
           caption: post.caption,
           imageUrl: fileUrl,
           imageId: uploadedFile.$id, //for delt image
@@ -100,7 +100,7 @@ export class DatabasesService {
     }
   }
 
-   getfileView(fileId: string) {
+  getfileView(fileId: string) {
     try {
       const fileUrl = this.storage.getFileView(
         config.storageId,
@@ -108,7 +108,7 @@ export class DatabasesService {
       );
 
       // The SDK returns a URL object → convert to string
-      return  String(fileUrl);
+      return String(fileUrl);
     } catch (error) {
       console.error(" Error generating file preview:", error);
       throw error;
@@ -125,48 +125,48 @@ export class DatabasesService {
     }
   }
 
-// async getRecentPosts(){
-//     const posts = await this.databases.listDocuments(
-//       config.databasesId,
-//       config.postcollectionId,
-//       [Query.orderDesc("$createdAt"), 
-//         Query.limit(20),
-//           Query.select(['*', 'creators.*'])
-//       ],
-//     );
+  // async getRecentPosts(){
+  //     const posts = await this.databases.listDocuments(
+  //       config.databasesId,
+  //       config.postcollectionId,
+  //       [Query.orderDesc("$createdAt"), 
+  //         Query.limit(20),
+  //           Query.select(['*', 'creators.*'])
+  //       ],
+  //     );
 
-//     if (!posts || !posts.documents) return [];
+  //     if (!posts || !posts.documents) return [];
 
-//     // Map Appwrite documents into your PostDocument type
-//     // const postDocuments: PostDocument[] = posts.documents.map((doc: Models.Document) => {
-//     //   // Access your custom fields from doc.data
-//     //   const data = doc as {
-//     //     caption?: string;
-//     //     imageUrl?: string;
-//     //     location?: string;
-//     //     likes?:Models.Document[]
-//     //     tags?: string[];
-//     //   };
+  //     // Map Appwrite documents into your PostDocument type
+  //     // const postDocuments: PostDocument[] = posts.documents.map((doc: Models.Document) => {
+  //     //   // Access your custom fields from doc.data
+  //     //   const data = doc as {
+  //     //     caption?: string;
+  //     //     imageUrl?: string;
+  //     //     location?: string;
+  //     //     likes?:Models.Document[]
+  //     //     tags?: string[];
+  //     //   };
 
-//     //   return {
-//     //     ...doc,
-//     //     caption: data.caption ?? "",
-//     //     imageUrl: data.imageUrl ?? "",
-//     //     location: data.location,
-//     //    likes: data.likes ?? [],
-//     //     tags: data.tags ?? [],
-//     //   };
-//     // });
-//     console.log("222",posts);
+  //     //   return {
+  //     //     ...doc,
+  //     //     caption: data.caption ?? "",
+  //     //     imageUrl: data.imageUrl ?? "",
+  //     //     location: data.location,
+  //     //    likes: data.likes ?? [],
+  //     //     tags: data.tags ?? [],
+  //     //   };
+  //     // });
+  //     console.log("222",posts);
 
-//     return posts.documents as unknown as PostDocument[]
-    
-//   }
+  //     return posts.documents as unknown as PostDocument[]
 
-  async likePost(postId: string, likesArray: string[]){
+  //   }
+
+  async likePost(postId: string, likesArray: string[]) {
     try {
       // console.log("🟢 Updating likes for post:", postId);
-    // console.log("🟢 likesArray being sent to Appwrite:", likesArray);
+      // console.log("🟢 likesArray being sent to Appwrite:", likesArray);
       const updatePost = await this.databases.updateDocument(
         config.databasesId,
         config.postcollectionId,
@@ -176,34 +176,34 @@ export class DatabasesService {
         }
 
       )
-      if(!updatePost) throw Error
+      if (!updatePost) throw Error
       return updatePost
-      
+
     } catch (error) {
       console.log(error);
-      
-      
+
+
     }
   }
 
   async getSavedRecord(userId: string, postId: string) {
-  try {
-    const result = await this.databases.listDocuments(
-      config.databasesId,
-      config.savescollectionId,
-      [
-        Query.equal("user", userId),
-        Query.equal("post", postId),
-      ]
-    );
-    return result;
-  } catch (err) {
-    console.error("Error fetching saved record", err);
-    return null;
+    try {
+      const result = await this.databases.listDocuments(
+        config.databasesId,
+        config.savescollectionId,
+        [
+          Query.equal("user", userId),
+          Query.equal("post", postId),
+        ]
+      );
+      return result;
+    } catch (err) {
+      console.error("Error fetching saved record", err);
+      return null;
+    }
   }
-}
 
-  async savePost(postId: string,userId: string,){
+  async savePost(postId: string, userId: string,) {
     try {
       const updatePost = await this.databases.createDocument(
         config.databasesId,
@@ -213,39 +213,39 @@ export class DatabasesService {
           user: userId,
           post: postId,
         }
-        
-        
+
+
       )
-      if(!updatePost) throw Error
+      if (!updatePost) throw Error
       return updatePost
-      
+
     } catch (error) {
       console.log(error);
-      
-      
+
+
     }
 
 
 
 
-    
+
   }
-   async deletesavePost(savedRecordId: string){
+  async deletesavePost(savedRecordId: string) {
     try {
       const statusCode = await this.databases.deleteDocument(
         config.databasesId,
         config.savescollectionId,
         savedRecordId,
-      
+
 
       )
-      if(!statusCode) throw Error
-      return {status: "ok"}
-      
+      if (!statusCode) throw Error
+      return { status: "ok" }
+
     } catch (error) {
       console.log(error);
-      
-      
+
+
     }
 
 
@@ -262,11 +262,11 @@ export class DatabasesService {
 
 
 
-    
+
   };
   // fetch saved post for specific users 
   // async useGetSavedPostsByUser(userId:string,){
-   
+
 
   //   try {
   //     const res = await this.databases.listDocuments(
@@ -274,7 +274,7 @@ export class DatabasesService {
   //       config.savescollectionId,
   //       [Query.equal("user",userId),
   //             Query.select(["*", "post.*"])  
-              
+
 
 
   //       ],
@@ -283,54 +283,54 @@ export class DatabasesService {
   //     );
 
   //     return res.documents
-      
+
   //   } catch (error) {
   //     console.log(error);
-      
-      
+
+
   //   }
   // };
 
 
-  async getPostById(postId:string): Promise<PostDocument>{
-    
-      
-      const post = await this.databases.getDocument(
-        config.databasesId,
-        config.postcollectionId,
-        postId,
-        [
-                    Query.select(['*', 'creators.*']) 
+  async getPostById(postId: string): Promise<PostDocument> {
 
-        ]
-      )
-      return post as unknown as PostDocument
-    
+
+    const post = await this.databases.getDocument(
+      config.databasesId,
+      config.postcollectionId,
+      postId,
+      [
+        Query.select(['*', 'creators.*'])
+
+      ]
+    )
+    return post as unknown as PostDocument
+
 
   };
-  
-   async UpdatePost(post: IUpdatePost) {
+
+  async UpdatePost(post: IUpdatePost) {
     const hasFiletoUpdate = post.file.length > 0
     try {
       let image = {
-        imageUrl:post.imageUrl,
-        imageId:post.imageId
+        imageUrl: post.imageUrl,
+        imageId: post.imageId
       }
-      if(hasFiletoUpdate){
+      if (hasFiletoUpdate) {
         const uploadedFile = await this.uploadFile(post.file[0]);
         if (!uploadedFile) throw new Error("File upload failed");
-         // Get public file preview URL
-      const fileUrl =  this.getfileView(uploadedFile.$id);
+        // Get public file preview URL
+        const fileUrl = this.getfileView(uploadedFile.$id);
 
-      if (!fileUrl) {
-        await this.deleteFile(uploadedFile.$id);
-        throw new Error("Failed to generate file preview URL");
-      }
-      image = {...image, imageUrl: fileUrl,imageId:uploadedFile.$id} 
+        if (!fileUrl) {
+          await this.deleteFile(uploadedFile.$id);
+          throw new Error("Failed to generate file preview URL");
+        }
+        image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id }
 
       }
- 
-     
+
+
 
       // Convert comma-separated tags → array
       const tags = post.tags?.replace(/ /g, "").split(",") || [];
@@ -348,7 +348,7 @@ export class DatabasesService {
           tags: tags,
         }
       );
-      if(!UpdatePost){
+      if (!UpdatePost) {
         await this.deleteFile(post.imageId)
       }
 
@@ -359,123 +359,180 @@ export class DatabasesService {
     }
   };
 
-  async  deletesPost(postId:string,imageId: string){
-    if(!postId || !imageId) throw Error
+  async deletesPost(postId: string, imageId: string) {
+    if (!postId || !imageId) throw Error
     try {
       await this.databases.deleteDocument(
         config.databasesId,
         config.postcollectionId,
         postId
       )
-      return {status: 'ok'}
-      
+      return { status: 'ok' }
+
     } catch (error) {
       console.log(error);
-      
-      
+
+
     }
 
   };
-  
-// async getInfinityPostforexplore() {
-//   // const queries: any[] = [
-//   //   Query.orderDesc("$updatedAt"),
-//   //   Query.limit(15),
-//   //   Query.select(["*", "creators.*"]),
-//   // ];
 
-//   // if (pageParam) {
-//   //   queries.push(Query.cursorAfter(pageParam));
-//   // }
+  // async getInfinityPostforexplore() {
+  //   // const queries: any[] = [
+  //   //   Query.orderDesc("$updatedAt"),
+  //   //   Query.limit(15),
+  //   //   Query.select(["*", "creators.*"]),
+  //   // ];
 
-//   try {
-//     const posts = await this.databases.listDocuments(
-//       config.databasesId,
-//       config.postcollectionId,
-//       // queries
-//     );
+  //   // if (pageParam) {
+  //   //   queries.push(Query.cursorAfter(pageParam));
+  //   // }
 
-//     if (!posts) throw new Error("No posts found");
-//     return posts;
-//   } catch (error) {
-//     console.log(error);
-//     throw error;
-//   }
-// }
+  //   try {
+  //     const posts = await this.databases.listDocuments(
+  //       config.databasesId,
+  //       config.postcollectionId,
+  //       // queries
+  //     );
+
+  //     if (!posts) throw new Error("No posts found");
+  //     return posts;
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
 
 
-  async searchPosts(searchTerm:string){
-    
+  async searchPosts(searchTerm: string) {
+
     try {
       const posts = await this.databases.listDocuments(
         config.databasesId,
         config.postcollectionId,
-        [Query.search('caption',searchTerm),
-                Query.select(["*","creators.*"]),   
+        [Query.search('caption', searchTerm),
+        Query.select(["*", "creators.*"]),
 
         ]
 
       );
-      if(!posts) throw Error
+      if (!posts) throw Error
       return posts
-      
+
     } catch (error) {
       console.log(error);
-      
-      
+
+
     }
 
   };
-  
+
   async getInfiniteDocuments({
-  pageParam,
-  collectionId,
-  filters = [],
-}: {
-  pageParam: string | null;
-  collectionId: string;
-  filters?: any[];
-}) {
-  const queries = [
-    Query.orderDesc("$updatedAt"),
-    Query.limit(10),
-    ...filters
-  ];
-
-
-  if (pageParam) {
-    queries.push(Query.cursorAfter(pageParam));
-  }
-
-  return await this.databases.listDocuments(
-    config.databasesId,
+    pageParam,
     collectionId,
-    queries
-  );
-};
+    filters = [],
+  }: {
+    pageParam: string | null;
+    collectionId: string;
+    filters?: any[];
+  }) {
+    const queries = [
+      Query.orderDesc("$updatedAt"),
+      Query.limit(10),
+      ...filters
+    ];
 
-//getUserById
- async getUserById(userId:string){
-  
+
+    if (pageParam) {
+      queries.push(Query.cursorAfter(pageParam));
+    }
+
+    return await this.databases.listDocuments(
+      config.databasesId,
+      collectionId,
+      queries
+    );
+  };
+
+  //getUserById
+  async getUserById(userId: string) {
+
     const user = await this.databases.getDocument(
       config.databasesId,
       config.userscollectionId,
       userId,
       [
-                  Query.select(['*', 'posts.*'])
-]
+        Query.select(['*', 'posts.*'])
+      ]
     );
-    if(!user) throw new Error
-  
-    return user 
-  } 
+    if (!user) throw new Error
+
+    return user
+  }
+
+  //update
+  async updateUser(user:IUpdateUser){
+    // const hasfiletoUpdate = user.file.length > 0
+    const hasfiletoUpdate = !!user.file
+    try {
+      let image = {
+        imageUrl: user.imageUrl,
+        imageid: user.imageid,
+      }
+      if(hasfiletoUpdate && user.file){
+        //upload new file to appwrite
+        const uploadFile = await this.uploadFile(user.file )
+        if(!uploadFile) throw new Error("File upload failed");
+        //get new fileUrl for user to show on screen
+        const fileUrl = this.getfileView(uploadFile.$id)
+        if(!fileUrl){
+          await this.deleteFile(uploadFile.$id)
+          throw Error
+        }
+        image = {...image,imageUrl: fileUrl,imageid: uploadFile.$id}
+      }
+      //update user
+
+      const updatedUser = await this.databases.updateDocument(
+        config.databasesId,
+        config.userscollectionId,
+        user.userId,
+        {
+          name:user.name,
+          bio:user.bio,
+          imageUrl:image.imageUrl,
+          imageid:image.imageid
+        }
+      );
+      //failed to update
+      if(!updatedUser){
+        if(hasfiletoUpdate){
+          await this.deleteFile(image.imageid)
+        }
+        //if no file uploaded throw error
+        throw Error
+      };
+
+      //safely delete old file after successfull update
+
+      if(user.imageid && hasfiletoUpdate){
+        await this.deleteFile(user.imageid)
+      }
+      
+      return updatedUser
+    } catch (error) {
+      console.log(error);
+      
+      
+    }
+  }
 
 
 
-  
 
-  
-  
+
+
+
 }
 
 const databasesservice = new DatabasesService();

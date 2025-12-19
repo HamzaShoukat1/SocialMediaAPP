@@ -2,10 +2,9 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
-  useInfiniteQuery
 } from '@tanstack/react-query'
 import  authservice from '../appwrite/auth'
-import type { INewPost, INewUser, IUpdatePost, IUser, SigninUser } from '../types/types'
+import type { INewPost, INewUser, IUpdatePost, IUpdateUser, SigninUser } from '../types/types'
 import databasesservice from '../appwrite/databases'
 import { QUERY_KEYS } from './querykeys'
 import type { PostDocument } from '@/components/ui/forms/Postform'
@@ -42,25 +41,31 @@ export const useCreatePostmutaion = ()=> {
 
 
 
-export const useLikedPost =  ()=> {
-  const queryClient = useQueryClient()
+export const useLikePost = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ( {postId,likesArray}: {postId: string; likesArray: string[]}) =>
-      databasesservice.likePost(postId,likesArray),
-    onSuccess: (_data,variables)=> {
-  
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_POST_BY_ID,variables.postId],
-        });
-           
-    
-
-
-    }
-      
-
-    
-  })
+    mutationFn: ({
+      postId,
+      likesArray,
+    }: {
+      postId: string;
+      likesArray: string[];
+    }) => databasesservice.likePost(postId, likesArray),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
 };
 export const useSavedPost = () => {
   const queryClient = useQueryClient();
@@ -218,6 +223,21 @@ export const usegetUserDetails = (userId:string)=> {
     queryKey: [QUERY_KEYS.GET_USER_DETAILS,userId],
     queryFn: ()=> databasesservice.getUserById(userId),
     enabled: !!userId
+  })
+};
+//update profile
+export const useUpdateUser = ()=> {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (user:IUpdateUser)=> databasesservice.updateUser(user),
+    onSuccess: (data)=> {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER]
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID,data?.$id]
+      })
+    }
   })
 }
 
