@@ -45,4 +45,6 @@ export function ProfileUploader({fieldChange,mediaUrl}:profileProps) {
   )
 }
 
+//You use this function to show the profile picture preview immediately after the user selects a file — exactly what it’s meant for.
+
 

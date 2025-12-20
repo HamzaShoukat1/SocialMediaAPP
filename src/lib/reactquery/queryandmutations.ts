@@ -240,6 +240,13 @@ export const useUpdateUser = ()=> {
     }
   })
 }
+//getallusers
+export const useGetALlusers = (limit:number = 10)=> {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: ()=> databasesservice.getUsers(limit)
+  })
+}
 
 
 

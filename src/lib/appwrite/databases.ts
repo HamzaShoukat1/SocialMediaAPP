@@ -526,6 +526,31 @@ export class DatabasesService {
       
     }
   }
+  //all users
+
+  async getUsers(limit:number){
+    const queries: any[] = [Query.orderDesc("$createdAt")];
+
+    if(limit){
+      queries.push(Query.limit(limit))
+    }
+    try {
+      const users = await this.databases.listDocuments(
+        config.databasesId,
+        config.userscollectionId,
+        queries
+      )
+      if(!users){
+        throw new Error
+      }
+      return users
+      
+    } catch (error) {
+          console.log(error);
+      
+    }
+
+  }
 
 
 
