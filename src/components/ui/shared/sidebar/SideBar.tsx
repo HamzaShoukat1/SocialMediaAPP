@@ -1,7 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "../../button";
 import { useSIgnoutAccountmutation } from "@/lib/reactquery/queryandmutations";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {AlertDialog,
   AlertDialogTrigger,
   AlertDialogContent,

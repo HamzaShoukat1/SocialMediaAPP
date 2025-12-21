@@ -24,7 +24,7 @@ import { useAuthContext } from '@/context/Authcontext/AuthContext';
 const SignupForm = () => {
   const navigate = useNavigate()
   //context
-  const {checkCurrentUser,isLoading:isUserLoading} = useAuthContext()
+  const {checkCurrentUser} = useAuthContext()
 
   // query
   const {mutateAsync: createUserAccount,isPending: isCreatingUser} = usecreateAccountMutation()

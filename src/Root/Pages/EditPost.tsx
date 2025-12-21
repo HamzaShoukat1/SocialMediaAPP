@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 
 const EditPost = () => {
   const {id} = useParams()
-  const {data:post,isPending} = usegetPostByID(id || '')
+  const {data:post} = usegetPostByID(id || '')
 
   // if(isPending) return (
   //   <div className="flex justify-center  items-center">

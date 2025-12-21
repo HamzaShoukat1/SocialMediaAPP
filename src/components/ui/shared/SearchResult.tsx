@@ -5,7 +5,7 @@ import type { PostDocument } from "../forms/Postform";
 
 type SearchProps = {
   issearchfetching:boolean,
-  SearchPosts: Models.DocumentList<PostDocument>
+  SearchPosts?: Models.DocumentList<PostDocument>
 
 }
 

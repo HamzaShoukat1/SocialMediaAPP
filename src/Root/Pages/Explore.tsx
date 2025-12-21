@@ -10,13 +10,13 @@ import { useInfiniteDocuments } from "@/lib/reactquery/UseInfinity";
 import { QUERY_KEYS } from "@/lib/reactquery/querykeys";
 import { config } from "@/lib/appwrite/config";
 import {type  PostDocument } from "@/components/ui/forms/Postform";
-import { Query } from "appwrite";
+import { Query, type Models } from "appwrite";
 const Explore = () => {
   const {ref,inView} = useInView()
-  // const { data:posts} = usegetPostsforexplore()
   const [searchValue, setsearchValue] = useState("");
   const debounceValue = useDebounce(searchValue,500)
   const {data,fetchNextPage,hasNextPage} = useInfiniteDocuments({
+    
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
     collectionId: config.postcollectionId,
       filters: [
@@ -28,6 +28,7 @@ const Explore = () => {
 
 
   })
+  console.log("mee",data);
   
 
   useEffect(() => {
@@ -38,7 +39,6 @@ const Explore = () => {
 const {data:searchpost,isFetching: isSearchFetching} = useSearchPost(debounceValue)
 
 
-console.log("see",data);
 
   if(!data){
     return (
@@ -50,10 +50,10 @@ console.log("see",data);
     
   }
     const savedPosts: PostDocument[] =
-      data?.pages.flatMap((page: any) =>
+      data?.pages.flatMap((page:any) =>
         page.documents.map((doc: any) => ({
           ...doc,
-          creators: doc.creators,
+          creators: doc.creators
         }))
       ) || [];
       
@@ -102,7 +102,7 @@ console.log("see",data);
       <div className="flex flex-wrap gap-9 w-full max-w-5xl">
         {shouldshowsearchresults ? (
           <SearchResult issearchfetching={isSearchFetching}
-          SearchPosts={searchpost} />
+          SearchPosts={searchpost as Models.DocumentList<PostDocument> | undefined} />
 
         ) : shouldshowposts ? (
           <p className="text-gray-300 mt-10 text-center w-full">End of Posts</p>
