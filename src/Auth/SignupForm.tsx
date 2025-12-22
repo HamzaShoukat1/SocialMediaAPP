@@ -58,17 +58,17 @@ const SignupForm = () => {
       email:values.email,
       password:values.password
     })
-    if(!signinsession) {
-      toast('Sign in failed.plz try again', {
-        style: {
-          background: 'black',
-          color:'white',
-          border: '1px solid white'
+    // if(!signinsession) {
+    //   toast('Sign in failed.plz try again', {
+    //     style: {
+    //       background: 'black',
+    //       color:'white',
+    //       border: '1px solid white'
 
-        }
+    //     }
         
-      })
-    }
+    //   })
+    // }
     const isLoggedIn = await checkCurrentUser()
     if(isLoggedIn){
       form.reset()
@@ -83,7 +83,7 @@ const SignupForm = () => {
       })
       navigate('/')
     }else{
-        return  toast('Sign in failed.plz try again', {
+        return  toast('Sign up failed.plz try again', {
         style: {
           background: 'black',
           color:'white',
@@ -97,7 +97,6 @@ const SignupForm = () => {
       
 
 
-    console.log(newUser);
   }
   return (
     <Form {...form}>
