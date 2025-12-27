@@ -15,13 +15,14 @@ export const usecreateAccountMutation = ()=> {
 }
 export  const useSigninAccountMutation = ()=> {
   return useMutation({
-    mutationFn: (user:SigninUser)=> authservice.SignInAccount(user)
+    mutationFn: (user:SigninUser)=> authservice.SignInAccount(user),
   })
 } 
 
-export const useSIgnoutAccountmutation = ()=> {
+export const useSIgnoutAccountmutation = (options?:any)=> {
   return useMutation({
-    mutationFn: authservice.SignoutAccount
+    mutationFn: authservice.SignoutAccount(),
+    ...options,
   })
 
 }
@@ -120,7 +121,7 @@ export const useDeleteSavedPost = () => {
 export const useGetCurrentUser = ()=> {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-    queryFn:  ()=> authservice.getCurreentUser()
+    queryFn:  ()=> authservice.getCurrentUser()
   })
 };
 

@@ -1,8 +1,8 @@
   import { Link } from "react-router-dom"
   import type { PostDocument } from "../forms/Postform"
   import { formatTimeAgo } from "@/lib/utils";
-  import { useAuthContext } from "@/context/Authcontext/AuthContext";
   import PostStats from "./PostStats";
+import { useAppSelector } from "@/Store/usehook";
 
 
   type PostCardProps = {
@@ -14,11 +14,9 @@
 
 
   const PostCard = ({post}:PostCardProps) => {
+      const { user } = useAppSelector(state => state.auth);
+    
 
-    const {user} = useAuthContext()
-    console.log("USER:", user);
-  console.log("POST:", post);
-  console.log("CREATOR:", post?.creators);
     // const isAuther = user && post ?
     // ( user.id === post.$id ? "flex" : "hidden") : "hidden"
     // if(!post.creators) return 

@@ -8,10 +8,10 @@ import {
 } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import LikedPost from "./LikedPost";
-import { useAuthContext } from "@/context/Authcontext/AuthContext";
 import GridPostList from "@/components/ui/shared/GridPostList";
 import Loader from "@/components/ui/shared/Loader";
 import { usegetUserDetails } from "@/lib/reactquery/queryandmutations";
+import { useAppSelector } from "@/Store/usehook";
 interface StarBlockProps {
   value: string | number;
   label: string;
@@ -25,8 +25,8 @@ const StarBlocks = ({ value, label }: StarBlockProps) => (
 
 const Profile = () => {
   const { id } = useParams();
-  const { user } = useAuthContext();
   const { pathname } = useLocation();
+  const { user } = useAppSelector(state => state.auth);
 
   const { data: currentUser,isLoading } = usegetUserDetails(id || "");
   console.log("1",currentUser?.posts);

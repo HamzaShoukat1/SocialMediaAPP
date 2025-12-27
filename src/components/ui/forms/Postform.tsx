@@ -17,10 +17,10 @@ import { Textarea } from "../textarea"
 import FileUploader from "../shared/FileUploader"
 import { PostValidation } from "@/lib/validation"
 import type { Models } from "appwrite"
-import { useAuthContext } from "@/context/Authcontext/AuthContext"
 import { useCreatePostmutaion, useUpdatePost } from "@/lib/reactquery/queryandmutations"
 import {toast} from 'sonner'
 import { Loader } from "lucide-react"
+import { useAppSelector } from "@/Store/usehook"
 
 export type PostDocument = Models.Document & {
   caption: string
@@ -46,10 +46,11 @@ export type PostFormProps = {
 }
 
 const Postform = ({ post,action }: PostFormProps) => {
+    const { user } = useAppSelector(state => state.auth);
+  
     const navigate = useNavigate()
     const {mutateAsync: createPost, isPending:isLoading} = useCreatePostmutaion()
     const {mutateAsync: updatePost,isPending: isLoadingUpdate} = useUpdatePost()
-    const {user} = useAuthContext()
 
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),

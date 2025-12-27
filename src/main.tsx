@@ -1,15 +1,17 @@
 import "./index.css";
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AuthIniitalizer from "./Store/AuthIniitalizer.tsx";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { Provider } from "react-redux";
+import { Store } from "./Store/Store.ts";
 const SigninForm = lazy(() => import("./Auth/SigninForm"));
 const SignupForm = lazy(() => import("./Auth/SignupForm"));
 const Home = lazy(() => import("./Root/Pages/Home"));
@@ -34,7 +36,7 @@ const router = createBrowserRouter(
       {/* public route  */}
       <Route
         element={
-            <AuthLayout />
+          <AuthLayout />
         }
       >
         <Route path="/sign-in" element={<SigninForm />} />
@@ -44,7 +46,7 @@ const router = createBrowserRouter(
       {/* private route  */}
       <Route
         element={
-             <Suspense>
+          <Suspense>
             <RootLayout />
           </Suspense>
         }
@@ -58,16 +60,19 @@ const router = createBrowserRouter(
         <Route path="/edit-post/:id" element={<EditPost />} />
 
         <Route path="/posts/:id" element={<PostDetails />} />
-        <Route path="/profile/:id/*" element={<Profile />} />
+        <Route path="/profile/:id" element={<Profile />} />
         <Route path="/update-profile/:id" element={<UpdateProfile />} />
       </Route>
     </Route>
   )
 );
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <Provider store={Store}>
+        <AuthIniitalizer>
+          <RouterProvider router={router} />
+
+        </AuthIniitalizer>
+      </Provider>
     </QueryClientProvider>
-  </StrictMode>
 );

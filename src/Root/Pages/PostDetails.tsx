@@ -2,20 +2,20 @@ import { useDeletePost, usegetPostByID } from "@/lib/reactquery/queryandmutation
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Loader from "@/components/ui/shared/Loader";
 import { formatTimeAgo } from "@/lib/utils";
-import { useAuthContext } from "@/context/Authcontext/AuthContext";
 import { Button } from "@/components/ui/button";
 import PostStats from "@/components/ui/shared/PostStats";
 import { toast } from "sonner";
+import { useAppSelector } from "@/Store/usehook";
 
 
 const PostDetails = () => {
   const {mutate:deletePost} = useDeletePost()
+    const { user } = useAppSelector(state => state.auth);
+  
   const { id } = useParams();
   const navigate = useNavigate()
 
   const { data: post, isPending } = usegetPostByID(id || "");
-  const {user} = useAuthContext()
-  console.log("21", post);
   const handleDelPost =()=> {
     deletePost({postId:id ?? "",imageId: post?.imageId ?? ""})
     toast.success('post deleted!', {

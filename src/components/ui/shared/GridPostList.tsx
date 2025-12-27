@@ -1,7 +1,7 @@
-import { useAuthContext } from "@/context/Authcontext/AuthContext"
 import type { PostDocument } from "../forms/Postform"
 import { Link } from "react-router-dom"
 import PostStats from "./PostStats"
+import { useAppSelector } from "@/Store/usehook"
 
 type Gridprops = {
   posts:PostDocument[]
@@ -9,9 +9,10 @@ type Gridprops = {
   showStats?: boolean
 }
 function GridPostList({posts,showUser = true, showStats = true}:Gridprops) {
+    const { user } = useAppSelector(state => state.auth);
   
   
-  const {user} = useAuthContext()
+  
   
   return (
 <ul className="grid w-full gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">  

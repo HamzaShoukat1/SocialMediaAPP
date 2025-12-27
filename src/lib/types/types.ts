@@ -52,13 +52,11 @@ export type SigninUser = {
   password: string;
 };
 
-export type IContextType = {
+export type IReduxType = {
   user:IUser
   isLoading:boolean
-  isauthenticated:boolean
-  setIsauthenticated:React.Dispatch<React.SetStateAction<boolean>>
-  setUser:React.Dispatch<React.SetStateAction<IUser>>
-checkCurrentUser: ()=> Promise<boolean>
+  isAuthenticated:boolean
+  
 };
 
 export type AppwriteDocument<T> = T & {

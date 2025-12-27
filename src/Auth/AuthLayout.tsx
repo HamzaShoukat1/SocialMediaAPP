@@ -1,12 +1,7 @@
-import {Outlet,Navigate} from 'react-router-dom'
-import { useAuthContext } from '@/context/Authcontext/AuthContext'
+import {Outlet} from 'react-router-dom'
 export default function AuthLayout() {
   
-  const { isauthenticated } = useAuthContext();
-
-  if (isauthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  
 
   return (
     <div className="flex h-screen"> 

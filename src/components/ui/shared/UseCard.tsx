@@ -10,7 +10,7 @@ export type userDocument = Models.Document & {
 
 }
 
-type userCardProps = {
+export type userCardProps = {
     user:userDocument
 }
 

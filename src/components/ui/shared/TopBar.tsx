@@ -1,21 +1,21 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../button'
 import { useSIgnoutAccountmutation } from '@/lib/reactquery/queryandmutations'
-import { useEffect } from 'react'
-import { INITIAL_USER, useAuthContext } from '@/context/Authcontext/AuthContext'
+import { useAppDispatch, useAppSelector } from '@/Store/usehook'
+import { logout } from '@/Store/AuthSlice'
 
 const TopBar = () => {
-    const {mutate:SignOut, isSuccess} = useSIgnoutAccountmutation()
+    const dispatch = useAppDispatch()
+      const { user } = useAppSelector(state => state.auth);
+    
+    const {mutate:SignOut} = useSIgnoutAccountmutation({
+         onSuccess: ()=> {
+        dispatch(logout())
+        naviagte('/sign-in')
+            }
+    })
     const naviagte = useNavigate()
-    const {setUser,user,setIsauthenticated} = useAuthContext()
-    useEffect(() => {
-        if(isSuccess){
-            setUser(INITIAL_USER)
-            setIsauthenticated(false)
-            naviagte("/sign-in")
-        }
-     
-    }, [isSuccess])
+
     
   return (
     <section className=' sticky top-0 '>
@@ -35,10 +35,12 @@ const TopBar = () => {
                 onClick={()=> SignOut()}>
                     <img src='/assets/icons/logout.svg' alt='logout' />
                 </Button>
-                <Link to={`/profile/${user.id}`} className='flex items-center gap-3'>
+              {user.id && (
+                  <Link to={`/profile/${user.id}`} className='flex items-center gap-3'>
                 <img src={ user.imageUrl || '/assets/icons/profile-placeholder.svg' } className='h-8 w-8   rounded-full' />
 
                 </Link>
+              )}
 
 
             </div>

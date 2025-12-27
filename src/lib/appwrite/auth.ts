@@ -27,6 +27,15 @@ export class AuthService {
                 user.password,
                 user.name,
             )
+            console.log("New Account:", newAccount);
+console.log("Account ID:", newAccount.$id);
+console.log("Saving user to DB with:", {
+  accountId: newAccount.$id,
+  name: newAccount.name,
+  email: newAccount.email,
+  username: user.username,
+});
+
             if(!newAccount) throw new Error('account creation failed')
             const avatarUrl = this.avatars.getInitials(user.name)
 
@@ -49,13 +58,13 @@ export class AuthService {
     };
     async SignInAccount(user:SigninUser) {
         try {
-           try {
-      await this.account.deleteSession('current');
-    } catch {
-      // ignore if no session exists
-    }
+         
             const session = await this.account.createEmailPasswordSession(user.email,user.password)
+            console.log("hello",session)
+           
+
             return session
+            
             
         } catch (error) {
             console.log('Sigin account creation failed',error)
@@ -64,45 +73,35 @@ export class AuthService {
         }
         
     }
-    async getCurreentUser(){
-        try {
-            const currentAccount = await this.account.get()
-            if(!currentAccount) throw new Error('no current a found')
+  async getCurrentUser() {
+    try {
+        const currentAccount = await this.account.get()
+        if (!currentAccount) throw new Error('No current account found');
 
-            // compares cuurentuserid with accountId so it return whole profile accroing to user 
-            const currentUser = await this.databases.listDocuments(
-                config.databasesId,
-                config.userscollectionId,
-                [Query.equal('accountId',currentAccount.$id),
-                 Query.select(['*', 'save.*']),
-                ]
-                
-                
-            )
-            if (!currentUser) throw new Error("No user found in database");
-            
-            if(currentUser.total === 0) return null
-            
-            
-            return currentUser.documents[0]
-         
+        const currentUser = await this.databases.listDocuments(
+            config.databasesId,
+            config.userscollectionId,
+            [Query.equal('accountId', currentAccount.$id)]
+        )
 
-            
-        } catch (error) {
-            console.log(error);
-            return null
-            
-            
-        }
+        if (!currentUser || currentUser.total === 0) return null;
+
+        return currentUser.documents[0];
+    } catch (error) {
+        console.log("getCurrentUser error:", error);
+        return null;
     }
+}
+
 
     async SignoutAccount(){
         try {
-            const session = await this.account.deleteSession('current')
-            return session
+      await this.account.deleteSessions()
             
         } catch (error) {
-            console.log(error);
+            console.log("logout failed",error);
+                  throw error;
+
             
         }
 

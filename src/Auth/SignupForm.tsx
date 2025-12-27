@@ -1,11 +1,11 @@
-import z from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, Link } from "react-router-dom"
-import { toast } from "sonner"
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button"
-import Loader from "@/components/ui/shared/Loader"
+import { Button } from "@/components/ui/button";
+import Loader from "@/components/ui/shared/Loader";
 import {
   Form,
   FormControl,
@@ -13,23 +13,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-import { Signupvalidation } from "@/lib/validation"
+import { Signupvalidation } from "@/lib/validation";
 import {
   usecreateAccountMutation,
   useSigninAccountMutation,
-} from "@/lib/reactquery/queryandmutations"
-import { useAuthContext } from "@/context/Authcontext/AuthContext"
+} from "@/lib/reactquery/queryandmutations";
 
+import { useAppDispatch } from "@/Store/usehook";
+import { checkCurrentUser } from "@/Store/AuthThunk";
 const SignupForm = () => {
-  const navigate = useNavigate()
-  const { checkCurrentUser } = useAuthContext()
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const { mutateAsync: createUserAccount, isPending } =
-    usecreateAccountMutation()
-  const { mutateAsync: signInAccount } = useSigninAccountMutation()
+    usecreateAccountMutation();
+  const { mutateAsync: signInAccount } = useSigninAccountMutation();
 
   const form = useForm<z.infer<typeof Signupvalidation>>({
     resolver: zodResolver(Signupvalidation),
@@ -39,45 +40,49 @@ const SignupForm = () => {
       email: "",
       password: "",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof Signupvalidation>) {
     try {
-      // 1. Create account
-      await createUserAccount(values)
+      // 1️⃣ Create Appwrite account
+      const newUser = await createUserAccount(values);
+      if (!newUser) {
+        throw new Error("Account creation failed");
+      }
 
-      // 2. Sign in
+      // 2️⃣ Login user
       const session = await signInAccount({
         email: values.email,
         password: values.password,
-      })
+      });
 
       if (!session) {
-        throw new Error("Signin failed")
+        throw new Error("Signin failed");
       }
 
-      // 3. Update auth context
-      await checkCurrentUser()
+      // 🔥 3️⃣ Sync Redux auth state (CRITICAL)
+      await dispatch(checkCurrentUser());
 
-      // 4. Success
-      form.reset()
+      // 4️⃣ Success
+      form.reset();
       toast("Sign up successful!", {
         style: {
           background: "black",
           color: "white",
           border: "1px solid white",
         },
-      })
+      });
 
-      navigate("/")
+      navigate("/", { replace: true });
     } catch (error) {
+      console.error("Signup error", error);
       toast("Sign up failed. Please try again", {
         style: {
           background: "black",
           color: "white",
           border: "1px solid white",
         },
-      })
+      });
     }
   }
 
@@ -139,7 +144,7 @@ const SignupForm = () => {
         </form>
       </div>
     </Form>
-  )
-}
+  );
+};
 
-export default SignupForm
+export default SignupForm;

@@ -15,16 +15,19 @@ import { Textarea } from "../../components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProfileValidation } from "@/lib/validation";
-import { useAuthContext } from "@/context/Authcontext/AuthContext";
 import {ProfileUploader} from "@/components/ui/shared/ProfileUploader";
 import { usegetUserDetails } from "@/lib/reactquery/queryandmutations";
 import { useUpdateUser } from "@/lib/reactquery/queryandmutations";
 import Loader from "@/components/ui/shared/Loader";
+import { useAppDispatch, useAppSelector } from "@/Store/usehook";
+import { updateUser } from "@/Store/AuthSlice";
 
 const UpdateProfile = () => {
+    const { user } = useAppSelector(state => state.auth);
+    const dispatch = useAppDispatch();
+  
   const navigate = useNavigate()
   const {id} = useParams()
-  const {user,setUser} = useAuthContext()
     const form = useForm<z.infer<typeof ProfileValidation>>({
     resolver: zodResolver(ProfileValidation),
     defaultValues: {
@@ -68,12 +71,20 @@ const UpdateProfile = () => {
        return
   
       };
-      setUser({
-        ...user,
-        name:updatedUser?.name,
-        bio:updatedUser?.bio,
-        imageUrl:updatedUser?.imageUrl
-      });
+      // setUser({
+      //   ...user,
+      //   name:updatedUser?.name,
+      //   bio:updatedUser?.bio,
+      //   imageUrl:updatedUser?.imageUrl
+      // });
+      dispatch(
+        updateUser({
+          name:updatedUser.name,
+          bio:updatedUser.bio,
+          imageUrl:updatedUser.imageUrl
+        })
+        
+      )
       return navigate(`/profile/${id}`)
   } catch (error) {
         toast("Something went wrong. Please try again.");
