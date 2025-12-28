@@ -4,11 +4,11 @@ import { Navigate, Outlet} from 'react-router-dom'
 
 export default function AuthLayout() {
 
-  const {isAuthenticated} = useAppSelector(state=>state.auth)
+  // const {status} = useAppSelector(state=>state.auth)
 
-  if(isAuthenticated){
-    return <Navigate to={"/sign-in"} />
-  }
+  // if(isAuthenticated){
+  //   return <Navigate to={"/sign-in"} replace />
+  // }
 
   
   

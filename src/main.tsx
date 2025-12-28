@@ -47,7 +47,9 @@ const router = createBrowserRouter(
       <Route
         element={
           <Suspense>
+            <AuthIniitalizer>
             <RootLayout />
+            </AuthIniitalizer>
           </Suspense>
         }
       >
@@ -60,7 +62,7 @@ const router = createBrowserRouter(
         <Route path="/edit-post/:id" element={<EditPost />} />
 
         <Route path="/posts/:id" element={<PostDetails />} />
-        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/profile/:id/*" element={<Profile />} />
         <Route path="/update-profile/:id" element={<UpdateProfile />} />
       </Route>
     </Route>
@@ -69,9 +71,9 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <Provider store={Store}>
-        <AuthIniitalizer>
+        {/* <AuthIniitalizer> */}
           <RouterProvider router={router} />
-        </AuthIniitalizer>
+        {/* </AuthIniitalizer> */}
       </Provider>
     </QueryClientProvider>
 );

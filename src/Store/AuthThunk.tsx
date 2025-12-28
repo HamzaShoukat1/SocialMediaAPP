@@ -8,20 +8,20 @@ export const checkCurrentUser = createAsyncThunk(
         try {
 
             //check seesion cookie
-            const account = await authservice.getAccount()
-            if(!account) return null
+            const cuurentUser = await authservice.getCurrentUser()
+            if(!cuurentUser) return null
 
 
-            const user = await authservice.getUserByAccountId(account.$id)
+
+            const {user} = cuurentUser
             // return user
-
             return {
-                 $id: user?.$id,
-        name: user?.name,
-        username: user?.username,
-        email: user?.email,
-        imageUrl: user?.imageUrl,
-        bio: user?.bio,
+                 $id: user?.$id || '',
+        name: user?.name || '',
+        username: user?.username || '',
+        email: user?.email || '',
+        imageUrl: user?.imageUrl || '',
+        bio: user?.bio || '',
             }
             
         } catch (error) {

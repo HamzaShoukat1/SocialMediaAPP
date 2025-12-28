@@ -52,12 +52,7 @@ export type SigninUser = {
   password: string;
 };
 
-export type IReduxType = {
-  user:IUser
-  isLoading:boolean
-  isAuthenticated:boolean
-  
-};
+
 
 export type AppwriteDocument<T> = T & {
   $id: string

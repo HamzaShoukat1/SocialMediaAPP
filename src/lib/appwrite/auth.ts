@@ -73,37 +73,40 @@ console.log("Saving user to DB with:", {
         }
         
     }
-    async getAccount() {
+async getCurrentUser() {
   try {
-    return await this.account.get()
-  } catch {
-    return null
+    // Step 1: Get account
+    const account = await this.account.get();
+    if (!account) return null;
+
+    // Step 2: Get user document linked to account
+    const users = await this.databases.listDocuments(
+      config.databasesId,
+      config.userscollectionId,
+      [Query.equal("accountId", account.$id)]
+    );
+
+    const user = users.total > 0 ? users.documents[0] : null;
+
+    // Return combined data
+    return { account, user };
+  } catch (err) {
+    console.error("Failed to get current user:", err);
+    return null;
   }
 }
-async getUserByAccountId(accountId: string) {
-  const users = await this.databases.listDocuments(
-    config.databasesId,
-    config.userscollectionId,
-    [Query.equal("accountId", accountId)]
-  )
 
-  return users.total > 0 ? users.documents[0] : null
+
+
+
+  async SignoutAccount() {
+  try {
+    await this.account.deleteSessions();
+  } catch (error) {
+    // DO NOT throw
+    console.warn("Session already cleared or user is guest");
+  }
 }
-
-
-
-    async SignoutAccount(){
-        try {
-      await this.account.deleteSessions()
-            
-        } catch (error) {
-            console.log("logout failed",error);
-                  throw error;
-
-            
-        }
-
-    }
 
 
 

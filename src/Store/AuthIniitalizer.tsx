@@ -1,18 +1,30 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "./usehook";
+import { checkCurrentUser } from "./AuthThunk";
+import { Navigate, useLocation } from "react-router-dom";
 
-import { useAppDispatch, useAppSelector } from "./usehook"
-import { checkCurrentUser } from "./AuthThunk"
+export default function AuthInitializer({ children }: { children: React.ReactNode }) {
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const { user } = useAppSelector((state) => state.auth); // only care about user
+  const [checking, setChecking] = useState(true);
 
-export default function AuthIniitalizer({ children }: { children: React.ReactNode }) {
-  const { isLoading } = useAppSelector(state => state.auth)
-
-  const dispatch = useAppDispatch()
+  // Check current user on mount
   useEffect(() => {
+    const initAuth = async () => {
+      try {
+        await dispatch(checkCurrentUser()).unwrap();
+      } catch (err) {
+        console.warn("User not logged in or session expired", err);
+      } finally {
+        setChecking(false);
+      }
+    };
+    initAuth();
+  }, [dispatch]);
 
-    dispatch(checkCurrentUser())
-
-  }, [])
-  if (isLoading) {
+  // Show loader while checking
+  if (checking) {
     return (
       <div className="flex justify-center items-center w-screen h-screen bg-gray-50">
         <div className="flex flex-col items-center space-y-4">
@@ -26,8 +38,13 @@ export default function AuthIniitalizer({ children }: { children: React.ReactNod
         </div>
       </div>
     );
-
   }
-  return <>
-    {children}</>
+
+  // Redirect if user is not logged in
+  if (!user) {
+    return <Navigate to="/sign-in" state={{ from: location }} replace />;
+  }
+
+  // If authenticated, render children
+  return <>{children}</>;
 }

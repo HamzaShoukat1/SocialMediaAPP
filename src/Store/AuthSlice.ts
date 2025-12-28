@@ -1,26 +1,31 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { checkCurrentUser } from "./AuthThunk";
-import type { IReduxType, IUser } from "@/lib/types/types";
+import type {  IUser } from "@/lib/types/types";
 
 import { loadState } from "./localStorage";
 const savedUser =  loadState()
 
 
-const INITIAL_USER = savedUser?.user || {
-    id: "",
-  name: "",
-  username: "",
-  email: "",
-  imageUrl: "",
-  bio: "",
+// const INITIAL_USER = savedUser?.user || {
+//     $id: "" ,
+//   name: "",
+//   username: "",
+//   email: "",
+//   imageUrl: "",
+//   bio: "",
 
-};
-const initialState:IReduxType = {
-    user:INITIAL_USER,
-    isLoading:savedUser ? false : true,
-    isAuthenticated:!!savedUser?.user?.id
+// };
+interface AuthState {
+    user:IUser | null,
+    status: "idle" | "loading" | "authenticated" | "unauthenticated"
 }
 
+const initialState: AuthState =  {
+    user:savedUser?.user?.$id ?? null,
+
+    status: 'idle',
+}
+// savedUser ? false : true,
 
 
 
@@ -30,15 +35,18 @@ const authSlice = createSlice({
     reducers: {
        
         logout: (state)=> {
-           state.user = initialState.user
+           state.user = null
+           state.status = 'unauthenticated'
 
         },
         updateUser: (state,action:PayloadAction<Partial<IUser>>)=> {
-            state.user = {
+          if(state.user){
+              state.user = {
                 ...state.user,
                 ...action.payload
             }
 
+          }
         }
     },
 
@@ -47,18 +55,17 @@ const authSlice = createSlice({
         builder
 
        .addCase(checkCurrentUser.pending,(state)=> {
-        state.isLoading = true
+        state.status = 'loading'
 
        })
          .addCase(checkCurrentUser.fulfilled,(state,action)=> {
-        state.isLoading = false;
         if(!action.payload){
-            state.user = initialState.user;
-            state.isAuthenticated = false;
-            return
+            state.user = null
+            state.status = 'unauthenticated';
+            
         }else{
                     state.user = action.payload
-        state.isAuthenticated = true
+        state.status = 'authenticated'
         }
 
 
@@ -66,9 +73,8 @@ const authSlice = createSlice({
 
        })
         .addCase(checkCurrentUser.rejected,(state)=> {
-        state.isLoading = false,
-        state.user = initialState.user;
-        state.isAuthenticated = false;
+        state.user = null
+        state.status = 'unauthenticated';
 
        })
        

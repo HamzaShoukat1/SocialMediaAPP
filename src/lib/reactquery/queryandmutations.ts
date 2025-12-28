@@ -21,7 +21,7 @@ export  const useSigninAccountMutation = ()=> {
 
 export const useSIgnoutAccountmutation = (options?:any)=> {
   return useMutation({
-    mutationFn: authservice.SignoutAccount(),
+    mutationFn:()=>  authservice.SignoutAccount(),
     ...options,
   })
 
@@ -50,7 +50,7 @@ export const useLikePost = () => {
       likesArray,
     }: {
       postId: string;
-      likesArray: string[];
+      likesArray: string[]
     }) => databasesservice.likePost(postId, likesArray),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
