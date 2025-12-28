@@ -71,7 +71,6 @@ createRoot(document.getElementById("root")!).render(
       <Provider store={Store}>
         <AuthIniitalizer>
           <RouterProvider router={router} />
-
         </AuthIniitalizer>
       </Provider>
     </QueryClientProvider>

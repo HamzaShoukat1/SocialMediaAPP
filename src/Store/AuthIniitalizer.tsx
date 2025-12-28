@@ -4,13 +4,13 @@ import { useAppDispatch, useAppSelector } from "./usehook"
 import { checkCurrentUser } from "./AuthThunk"
 
 export default function AuthIniitalizer({ children }: { children: React.ReactNode }) {
-  const {isLoading} = useAppSelector(state=> state.auth)
-
+  const { isLoading } = useAppSelector(state => state.auth)
 
   const dispatch = useAppDispatch()
   useEffect(() => {
+
     dispatch(checkCurrentUser())
- 
+
   }, [])
   if (isLoading) {
     return (

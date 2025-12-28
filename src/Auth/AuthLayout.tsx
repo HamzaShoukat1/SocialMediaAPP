@@ -1,5 +1,15 @@
-import {Outlet} from 'react-router-dom'
+import { useAppSelector } from '@/Store/usehook';
+import { Navigate, Outlet} from 'react-router-dom'
+
+
 export default function AuthLayout() {
+
+  const {isAuthenticated} = useAppSelector(state=>state.auth)
+
+  if(isAuthenticated){
+    return <Navigate to={"/sign-in"} />
+  }
+
   
   
 
@@ -17,3 +27,4 @@ export default function AuthLayout() {
     </div>
   );
 }
+

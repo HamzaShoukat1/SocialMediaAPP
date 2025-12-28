@@ -94,11 +94,11 @@ navigate('/sign-in')
         {!iscollapsed && (
           <div className="flex flex-col justify-center items-center mb-10  ">
             
-            {user.id ? (
-                <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
+            {/* {user.$id && ( */}
+                <Link to={`/profile/${user.$id}`} className="flex gap-3 items-center">
                 <img src={user.imageUrl || "/assets/icons/profile-placeholder.svg"} className="w-20 h-20 rounded-full" />
               </Link>
-            ): null}
+            {/* )} */}
             <div className="flex flex-col items-center">
               <p className="body-bold">{user.name}</p>
               <p className="small-regular">@{user.username}</p>

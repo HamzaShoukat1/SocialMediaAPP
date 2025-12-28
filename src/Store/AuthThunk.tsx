@@ -6,17 +6,22 @@ export const checkCurrentUser = createAsyncThunk(
     'auth/checkCurrentUser',
     async(_, {rejectWithValue})=> {
         try {
-            const account = await authservice.getCurrentUser()
+
+            //check seesion cookie
+            const account = await authservice.getAccount()
             if(!account) return null
 
 
+            const user = await authservice.getUserByAccountId(account.$id)
+            // return user
+
             return {
-                 id: account.$id,
-        name: account.name,
-        username: account.username,
-        email: account.email,
-        imageUrl: account.imageUrl,
-        bio: account.bio,
+                 $id: user?.$id,
+        name: user?.name,
+        username: user?.username,
+        email: user?.email,
+        imageUrl: user?.imageUrl,
+        bio: user?.bio,
             }
             
         } catch (error) {

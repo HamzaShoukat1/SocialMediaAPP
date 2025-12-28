@@ -73,25 +73,23 @@ console.log("Saving user to DB with:", {
         }
         
     }
-  async getCurrentUser() {
-    try {
-        const currentAccount = await this.account.get()
-        if (!currentAccount) throw new Error('No current account found');
-
-        const currentUser = await this.databases.listDocuments(
-            config.databasesId,
-            config.userscollectionId,
-            [Query.equal('accountId', currentAccount.$id)]
-        )
-
-        if (!currentUser || currentUser.total === 0) return null;
-
-        return currentUser.documents[0];
-    } catch (error) {
-        console.log("getCurrentUser error:", error);
-        return null;
-    }
+    async getAccount() {
+  try {
+    return await this.account.get()
+  } catch {
+    return null
+  }
 }
+async getUserByAccountId(accountId: string) {
+  const users = await this.databases.listDocuments(
+    config.databasesId,
+    config.userscollectionId,
+    [Query.equal("accountId", accountId)]
+  )
+
+  return users.total > 0 ? users.documents[0] : null
+}
+
 
 
     async SignoutAccount(){

@@ -20,7 +20,7 @@ export function useInfiniteDocuments({
     Error, // error type
     InfiniteData<Models.DocumentList<Models.Document>>, // data type returned from queryFn
     string[] // query key type
-  >({
+>({
     queryKey,
     enabled,
     initialPageParam: null,

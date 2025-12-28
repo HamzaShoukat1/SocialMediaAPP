@@ -28,7 +28,6 @@ const Explore = () => {
 
 
   })
-  console.log("mee",data);
   
 
   useEffect(() => {
