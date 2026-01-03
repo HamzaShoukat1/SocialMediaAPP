@@ -359,7 +359,7 @@ export class DatabasesService {
         await this.deleteFile(post.imageId)
       }
 
-      return UpdatePost;
+      return UpdatePost
     } catch (error) {
       console.error(" Error creating post:", error);
       throw error;
