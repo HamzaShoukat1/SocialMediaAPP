@@ -124,6 +124,7 @@ const Postform = ({ post,action }: PostFormProps) => {
     navigate('/')
   }
 
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">

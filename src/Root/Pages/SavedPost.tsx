@@ -10,8 +10,11 @@ import { useInView } from "react-intersection-observer";
 import { useInfiniteDocuments } from "@/lib/reactquery/UseInfinity";
 
 const Saved = () => {
-  const { data: currentUser, isPending: isUserPending } = useGetCurrentUser();
+  const { data: currentUserData, isPending: isUserPending } = useGetCurrentUser();
 
+
+
+  const currentUser = currentUserData?.user
   const { ref, inView } = useInView();
 
   const {
@@ -29,7 +32,7 @@ const Saved = () => {
     ],
     enabled: !!currentUser?.$id
   });
-  console.log("hello",data);
+  console.log("2121",data);
   
 
   useEffect(() => {
@@ -47,6 +50,7 @@ const Saved = () => {
       }))
     ) || [];
     
+    console.log("chutia",savedPosts)
 
   return (
     <div className="saved-container">

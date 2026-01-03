@@ -33,12 +33,12 @@ export function formatTimeAgo(dateString: string): string {
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   const intervals: Record<string, number> = {
-    year: 31536000,
-    month: 2592000,
-    week: 604800,
-    day: 86400,
-    hour: 3600,
-    minute: 60,
+    year: 31536000,           
+    month: 2592000,           
+    week: 604800,           
+    day: 86400,           
+    hour: 3600,           
+    minute: 60,           
   };
 
   if (seconds < 5) return "just now";
@@ -54,6 +54,6 @@ export function formatTimeAgo(dateString: string): string {
 
   return `${Math.floor(seconds)} seconds ago`;
 }
-export const checkIsLiked = (likeList: string[] , userId: string) => {
+export const checkIsLiked = (likeList: string[], userId: string) => {
   return likeList.includes(userId);
 };

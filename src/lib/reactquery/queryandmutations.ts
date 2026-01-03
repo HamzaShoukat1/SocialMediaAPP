@@ -3,35 +3,37 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
-import  authservice from '../appwrite/auth'
+import authservice from '../appwrite/auth'
 import type { INewPost, INewUser, IUpdatePost, IUpdateUser, SigninUser } from '../types/types'
 import databasesservice from '../appwrite/databases'
 import { QUERY_KEYS } from './querykeys'
 import type { PostDocument } from '@/components/ui/forms/Postform'
-export const usecreateAccountMutation = ()=> {
+
+
+export const usecreateAccountMutation = () => {
   return useMutation({
-    mutationFn: (user:INewUser)=> authservice.createUserAccount(user)
+    mutationFn: (user: INewUser) => authservice.createUserAccount(user)
   })
 }
-export  const useSigninAccountMutation = ()=> {
+export const useSigninAccountMutation = () => {
   return useMutation({
-    mutationFn: (user:SigninUser)=> authservice.SignInAccount(user),
+    mutationFn: (user: SigninUser) => authservice.SignInAccount(user),
   })
-} 
+}
 
-export const useSIgnoutAccountmutation = (options?:any)=> {
+export const useSIgnoutAccountmutation = (options?: any) => {
   return useMutation({
-    mutationFn:()=>  authservice.SignoutAccount(),
+    mutationFn: () => authservice.SignoutAccount(),
     ...options,
   })
 
 }
-export const useCreatePostmutaion = ()=> {
+export const useCreatePostmutaion = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (post:INewPost)=> databasesservice.createPost(post),
-    onSuccess: ()=> {
+    mutationFn: (post: INewPost) => databasesservice.createPost(post),
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
       })
@@ -68,6 +70,8 @@ export const useLikePost = () => {
     },
   });
 };
+
+
 export const useSavedPost = () => {
   const queryClient = useQueryClient();
 
@@ -98,7 +102,7 @@ export const useDeleteSavedPost = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ savedRecordId }: { savedRecordId: string,userId:string },) =>
+    mutationFn: ({ savedRecordId }: { savedRecordId: string, userId: string },) =>
       databasesservice.deletesavePost(savedRecordId),
 
     onSuccess: (_data, { userId }) => {
@@ -118,39 +122,39 @@ export const useDeleteSavedPost = () => {
   })
 }
 
-export const useGetCurrentUser = ()=> {
+export const useGetCurrentUser = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-    queryFn:  ()=> authservice.getCurrentUser()
+    queryFn: () => authservice.getCurrentUser()
   })
 };
 
-export const usegetPostByID = (postId:string)=> {
+export const usegetPostByID = (postId: string) => {
   return useQuery<PostDocument>({
-    queryKey: [QUERY_KEYS.GET_POST_BY_ID,postId],
-    queryFn: ()=> databasesservice.getPostById(postId),
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+    queryFn: () => databasesservice.getPostById(postId),
     enabled: !!postId //“Only fetch the post if we actually have a postId.”
     //So we write enabled: !!postId to prevent the query from running before we have a valid post ID — avoiding wasted requests and errors.
   })
 };
-export const useUpdatePost = ()=> {
+export const useUpdatePost = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn:(post:IUpdatePost)=> databasesservice.UpdatePost(post), 
-    onSuccess: (data)=> {
+    mutationFn: (post: IUpdatePost) => databasesservice.UpdatePost(post),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POST_BY_ID,data?.$id]
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
       })
 
     }
   })
 
 };
-export const useDeletePost = ()=> {
+export const useDeletePost = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn:({postId,imageId}: {postId:string,imageId:string})=> databasesservice.deletesPost(postId,imageId), 
-    onSuccess: ()=> {
+    mutationFn: ({ postId, imageId }: { postId: string, imageId: string }) => databasesservice.deletesPost(postId, imageId),
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
       })
@@ -166,7 +170,7 @@ export const useDeletePost = ()=> {
 //     return   databasesservice.getInfinityPostforexplore()
 //     }
 //   })
-                                                                            
+
 
 //   // queryFn: () =>
 //   //   databasesservice.getInfinityPostforexplore(),
@@ -192,60 +196,60 @@ export const useDeletePost = ()=> {
 
 
 
-export const useSearchPost = (searchTerm: string)=> {
+export const useSearchPost = (searchTerm: string) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.SEARCH_POSTS,searchTerm],
-    queryFn: ()=> databasesservice.searchPosts(searchTerm),
+    queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
+    queryFn: () => databasesservice.searchPosts(searchTerm),
     enabled: !!searchTerm
 
   })
 
 };
 //never use this {} in mutation func
-export const UseDeletePost = ()=> {
+export const UseDeletePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({postId,imageId}: {postId:string,imageId: string})=> 
-      databasesservice.deletesPost(postId,imageId),
-      onSuccess: ()=> {
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-        })
-      }
+    mutationFn: ({ postId, imageId }: { postId: string, imageId: string }) =>
+      databasesservice.deletesPost(postId, imageId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      })
+    }
 
-    
-  })  
+
+  })
 
 }
 
 // for profile ..//get userid
-export const usegetUserDetails = (userId:string)=> {
+export const usegetUserDetails = (userId: string) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.GET_USER_DETAILS,userId],
-    queryFn: ()=> databasesservice.getUserById(userId),
+    queryKey: [QUERY_KEYS.GET_USER_DETAILS, userId],
+    queryFn: () => databasesservice.getUserById(userId),
     enabled: !!userId
   })
 };
 //update profile
-export const useUpdateUser = ()=> {
+export const useUpdateUser = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (user:IUpdateUser)=> databasesservice.updateUser(user),
-    onSuccess: (data)=> {
+    mutationFn: (user: IUpdateUser) => databasesservice.updateUser(user),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_CURRENT_USER]
       });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POST_BY_ID,data?.$id]
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
       })
     }
   })
 }
 //getallusers
-export const useGetALlusers = (limit:number = 10)=> {
+export const useGetALlusers = (limit: number = 10) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USERS],
-    queryFn: ()=> databasesservice.getUsers(limit)
+    queryFn: () => databasesservice.getUsers(limit)
   })
 }
 

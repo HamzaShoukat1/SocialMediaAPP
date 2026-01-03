@@ -165,8 +165,7 @@ export class DatabasesService {
 
   async likePost(postId: string, likesArray: string[]) {
     try {
-      // console.log("🟢 Updating likes for post:", postId);
-      // console.log("🟢 likesArray being sent to Appwrite:", likesArray);
+  
       const updatePost = await this.databases.updateDocument(
         config.databasesId,
         config.postcollectionId,
@@ -194,7 +193,7 @@ export class DatabasesService {
         [
           Query.equal("user", userId),
           Query.equal("post", postId),
-        ]
+        ],
       );
       return result;
     } catch (err) {
@@ -212,25 +211,16 @@ export class DatabasesService {
         {
           user: userId,
           post: postId,
-        }
-
-
+        },
       )
       if (!updatePost) throw Error
       return updatePost
 
     } catch (error) {
       console.log(error);
-
-
     }
-
-
-
-
-
-  }
-  async deletesavePost(savedRecordId: string) {
+  };
+  async deletesavePost(savedRecordId: string,) {
     try {
       const statusCode = await this.databases.deleteDocument(
         config.databasesId,
