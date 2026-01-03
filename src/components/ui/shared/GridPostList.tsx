@@ -40,7 +40,7 @@ function GridPostList({ posts, showUser = true, showStats = true }: Gridprops) {
               </div>
             )}
 
-            {showStats && <PostStats post={post} userId={user.id} />}
+            {showStats && <PostStats post={post} userId={user?.$id ?? ""} />}
           </div>
         </li>
       ))}

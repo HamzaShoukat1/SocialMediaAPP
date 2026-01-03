@@ -35,9 +35,9 @@ const TopBar = () => {
                 onClick={()=> SignOut()}>
                     <img src='/assets/icons/logout.svg' alt='logout' />
                 </Button>
-              {user.$id && (
-                  <Link to={`/profile/${user.$id}`} className='flex items-center gap-3'>
-                <img src={ user.imageUrl || '/assets/icons/profile-placeholder.svg' } className='h-8 w-8   rounded-full' />
+              {user?.$id && (
+                  <Link to={`/profile/${user?.$id}`} className='flex items-center gap-3'>
+                <img src={ user?.imageUrl || '/assets/icons/profile-placeholder.svg' } className='h-8 w-8   rounded-full' />
 
                 </Link>
               )}

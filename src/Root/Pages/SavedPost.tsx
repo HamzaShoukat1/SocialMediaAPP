@@ -32,7 +32,6 @@ const Saved = () => {
     ],
     enabled: !!currentUser?.$id
   });
-  console.log("2121",data);
   
 
   useEffect(() => {
@@ -50,7 +49,6 @@ const Saved = () => {
       }))
     ) || [];
     
-    console.log("chutia",savedPosts)
 
   return (
     <div className="saved-container">

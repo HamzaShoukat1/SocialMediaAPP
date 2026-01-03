@@ -21,11 +21,10 @@ import type { INavLink } from "@/lib/types/types";
 import { useLocation } from "react-router-dom";
 
 function SideBar({ iscollapsed, setiscollapsed }: any) {
-  const { user ,status} = useAppSelector(state => state.auth);
+  const { user} = useAppSelector(state => state.auth);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
-  console.log("aaz",status)
 
   const { mutate: SignOut } = useSIgnoutAccountmutation({
     onSuccess: () => {

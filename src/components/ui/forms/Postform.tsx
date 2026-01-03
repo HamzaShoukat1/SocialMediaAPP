@@ -18,39 +18,37 @@ import FileUploader from "../shared/FileUploader"
 import { PostValidation } from "@/lib/validation"
 import type { Models } from "appwrite"
 import { useCreatePostmutaion, useUpdatePost } from "@/lib/reactquery/queryandmutations"
-import {toast} from 'sonner'
+import { toast } from 'sonner'
 import { Loader } from "lucide-react"
 import { useAppSelector } from "@/Store/usehook"
 
 export type PostDocument = Models.Document & {
   caption: string
   location?: string
-  imageId:string,
-  imageUrl: string 
-
-    likes?: Models.Document[] //for poststats
+  imageId: string,
+  imageUrl: string
+  likes?: Models.Document[] //for poststats
   tags: string[]
-  creators:{
-    $id:string,
-    name:string,
-    username?:string,
-    imageUrl:string
-    accountId:string
+  creators: {
+    $id: string,
+    name: string,
+    username?: string,
+    imageUrl: string
+    accountId: string
   }
 }
 
 export type PostFormProps = {
-  post?: PostDocument 
+  post?: PostDocument
   action: "Create" | "Update"
 
 }
 
-const Postform = ({ post,action }: PostFormProps) => {
-    const { user } = useAppSelector(state => state.auth);
-  
-    const navigate = useNavigate()
-    const {mutateAsync: createPost, isPending:isLoading} = useCreatePostmutaion()
-    const {mutateAsync: updatePost,isPending: isLoadingUpdate} = useUpdatePost()
+const Postform = ({ post, action }: PostFormProps) => {
+  const { user } = useAppSelector(state => state.auth);
+  const navigate = useNavigate()
+  const { mutateAsync: createPost, isPending: isLoading } = useCreatePostmutaion()
+  const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost()
 
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
@@ -62,61 +60,60 @@ const Postform = ({ post,action }: PostFormProps) => {
     },
   })
 
-   async function onSubmit(values: z.infer<typeof PostValidation>) {
-  if (post && action === 'Update'){
-    const UpdatePost = await updatePost({
-      ...values,
-      postId:post.$id,
-      imageId:post.imageId,
-       imageUrl:post?.imageUrl
-
-    })
-    console.log(UpdatePost);
-    
-    if(!UpdatePost){
-       toast.error('try again please', {
-      style: {
-        backgroundColor:'black',
-        color:'white',
-        border: '1px solid white'
-
-      }
-    });
-     
-
-  };
-   toast.success('post updated successfully', {
-      style: {
-        backgroundColor:'black',
-        color:'white',
-        border: '1px solid white'
-
-      }
-    });
-  navigate(`/posts/${post.$id}`)
-  return;
-   
-  }
-    console.log(values)
-       const newPost =  await createPost({
+  async function onSubmit(values: z.infer<typeof PostValidation>) {
+    if (post && action === 'Update') {
+      const UpdatePost = await updatePost({
         ...values,
-        userId: user.id,
-    })
-    if(!newPost){
-         return  toast('try again plz', {
+        postId: post.$id,
+        imageId: post.imageId,
+        imageUrl: post?.imageUrl,
+        creators: post.creators.$id
+
+      })
+
+      if (!UpdatePost) {
+        toast.error('try again please', {
+          style: {
+            backgroundColor: 'black',
+            color: 'white',
+            border: '1px solid white'
+
+          }
+        });
+
+
+      };
+      toast.success('post updated successfully', {
         style: {
-          background: 'black',
-          color:'white',
+          backgroundColor: 'black',
+          color: 'white',
           border: '1px solid white'
 
         }
-        
+      });
+      navigate(`/posts/${post.$id}`)
+      return;
+
+    }
+    const newPost = await createPost({
+      ...values,
+      userId: user?.$id,
+    })
+    if (!newPost) {
+      return toast('try again plz', {
+        style: {
+          background: 'black',
+          color: 'white',
+          border: '1px solid white'
+
+        }
+
       })
     }
     toast.success('post created successfullt', {
       style: {
-        backgroundColor:'black',
-        color:'white',
+        backgroundColor: 'black',
+        color: 'white',
         border: '1px solid white'
 
       }
@@ -124,7 +121,7 @@ const Postform = ({ post,action }: PostFormProps) => {
     navigate('/')
   }
 
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
@@ -153,7 +150,7 @@ const Postform = ({ post,action }: PostFormProps) => {
             <FormItem>
               <FormLabel className="text-white shad-form_label">Add Photos</FormLabel>
               <FormControl>
-                <FileUploader fieldChange={field.onChange} mediaUrl={post?.imageUrl ||''} />
+                <FileUploader fieldChange={field.onChange} mediaUrl={post?.imageUrl || ''} />
               </FormControl>
               <FormMessage className="text-red-500" />
             </FormItem>
@@ -209,14 +206,14 @@ const Postform = ({ post,action }: PostFormProps) => {
           <Button
             className="shad-button_primary text-[12px] w-24 flex items-center justify-center gap-2   rounded-2xl cursor-pointer"
             type="submit"
-            disabled={ isLoading || isLoadingUpdate}
+            disabled={isLoading || isLoadingUpdate}
           >
-           {isLoading || isLoadingUpdate && (
-            <Loader  className=""/>
+            {isLoading || isLoadingUpdate && (
+              <Loader className="" />
 
-           )
+            )
             }
-        <span>{action} post</span>
+            <span>{action} post</span>
           </Button>
         </div>
       </form>

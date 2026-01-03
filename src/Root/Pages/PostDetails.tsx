@@ -77,14 +77,14 @@ const PostDetails = () => {
           </Link>
           {/* // 2*/}
           <div className="flex items-center ">
-            <Link to={`/edit-post/${post?.$id}`} className={`${user.id !== post?.creators.$id && "hidden"}`}>
+            <Link to={`/edit-post/${post?.$id}`} className={`${user?.$id !== post?.creators.$id && "hidden"}`}>
             <img src="/assets/icons/edit.svg" width={24} height={23} />
             </Link>
             <Button
 
             onClick={handleDelPost}
             variant='ghost'
-            className={`${user.id !== post?.creators.$id && "hidden"}`}
+            className={`${user?.$id !== post?.creators.$id && "hidden"}`}
             >
               <img src="/assets/icons/delete.svg"
               className="cursor-pointer"
@@ -116,7 +116,7 @@ const PostDetails = () => {
           </div>
           {/* // */}
           <div className="w-full">
-            <PostStats post={post} userId={user.id} />
+            <PostStats post={post} userId={user?.$id ?? ""} />
 
           </div>
 

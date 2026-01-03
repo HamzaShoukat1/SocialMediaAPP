@@ -82,7 +82,7 @@ import { useAppSelector } from "@/Store/usehook";
           className="post-card_img mt-2 bg-amber-200" alt="post img" />
 
           </Link>
-          <PostStats post={post} userId={user?.$id} />
+          <PostStats post={post} userId={user?.$id ?? ""} />
           
       </div>
       

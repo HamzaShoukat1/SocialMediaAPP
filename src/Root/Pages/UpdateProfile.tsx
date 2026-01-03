@@ -32,10 +32,10 @@ const UpdateProfile = () => {
     resolver: zodResolver(ProfileValidation),
     defaultValues: {
       file: null,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      bio: user.bio || "",
+      name: user?.name,
+      username: user?.username,
+      email: user?.email,
+      bio: user?.bio || "",
     },
   });
 

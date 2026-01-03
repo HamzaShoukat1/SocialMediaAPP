@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import { Provider } from "react-redux";
 import { Store } from "./Store/Store.ts";
+import ErrorPage from "./Root/Pages/ErrorPage.tsx";
 const SigninForm = lazy(() => import("./Auth/SigninForm"));
 const SignupForm = lazy(() => import("./Auth/SignupForm"));
 const Home = lazy(() => import("./Root/Pages/Home"));
@@ -32,7 +33,9 @@ const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
+    <Route
+    errorElement={<ErrorPage />}
+     path="/" element={<App />}>
       {/* public route  */}
       <Route
         element={

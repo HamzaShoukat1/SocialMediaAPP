@@ -100,7 +100,6 @@ export const useGetSavedRecord = (userId: string, postId: string) => {
 
 export const useDeleteSavedPost = () => {
   const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: ({ savedRecordId }: { savedRecordId: string, userId: string },) =>
       databasesservice.deletesavePost(savedRecordId),

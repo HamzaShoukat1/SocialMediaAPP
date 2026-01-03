@@ -62,7 +62,11 @@ export class DatabasesService {
       }
 
       // Convert comma-separated tags → array
-      const tags = post.tags?.replace(/ /g, "").split(",") || [];
+      const tags = post.tags?.replace(/ /g, "").split(",") || []; //replace remove spaces ,
+      //Every time JavaScript sees ,, it:
+      //Cuts the string
+      //Removes the comma
+      //Stores the pieces in an array
 
       // Save post document to Appwrite database
       const newPost = await this.databases.createDocument(
@@ -85,7 +89,7 @@ export class DatabasesService {
       throw error;
     }
   }
-
+//utility func
   async uploadFile(file: File) {
     try {
       const uploadedFile = await this.storage.createFile(
@@ -99,7 +103,7 @@ export class DatabasesService {
       throw error;
     }
   }
-
+//utilyf func
   getfileView(fileId: string) {
     try {
       const fileUrl = this.storage.getFileView(
@@ -117,7 +121,11 @@ export class DatabasesService {
 
   async deleteFile(fileId: string) {
     try {
-      await this.storage.deleteFile(config.storageId, fileId);
+      await this.storage.deleteFile(
+        config.storageId,
+         fileId
+
+      );
       return { status: "ok" };
     } catch (error) {
       console.error(" Error deleting file:", error);
@@ -324,6 +332,15 @@ export class DatabasesService {
 
       // Convert comma-separated tags → array
       const tags = post.tags?.replace(/ /g, "").split(",") || [];
+
+// console.log("Updating post with data:", {
+//   caption: post.caption,
+//   imageUrl: image.imageUrl,
+//   imageId: image.imageId,
+//   location: post.location,
+//   tags: tags,
+//   creators: post.creators, // log this too just in case
+// });
 
       // Save post document to Appwrite database
       const UpdatePost = await this.databases.updateDocument(
