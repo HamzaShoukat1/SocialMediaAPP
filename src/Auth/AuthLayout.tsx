@@ -1,5 +1,4 @@
-import { useAppSelector } from '@/Store/usehook';
-import { Navigate, Outlet} from 'react-router-dom'
+import {  Outlet} from 'react-router-dom'
 
 
 export default function AuthLayout() {
